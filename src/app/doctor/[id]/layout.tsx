@@ -14,7 +14,14 @@ export default function HomeLayout({
 }>) {
   return (
     <main>
-      <Navbar user={null} />
+      <Navbar
+        user={{
+          id: "1",
+          username: "Gamingstein",
+          avatar: "",
+          email: "something",
+        }}
+      />
       {children}
       <Footer />
     </main>
