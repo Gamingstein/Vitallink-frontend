@@ -1,35 +1,13 @@
 "use client";
+import { login } from "@/app/actions/auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
+import { useFormState, useFormStatus } from "react-dom";
 
-export default function LogIn() {
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const handleSubmit = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    e.preventDefault();
-    const response = await axios.post(
-      "http://localhost:8000/api/v1/users/login",
-      {
-        email: email,
-        username: username,
-        password: password,
-      },
-    );
-    console.log(response?.data);
-    if (response.status === 200) {
-      router.push("/");
-    } else {
-      console.log("error");
-    }
-  };
+export default function LoginForm() {
+  const { pending } = useFormStatus();
+  const [state, action] = useFormState(login, undefined);
   return (
     <div className="max-w-[600px] w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-2xl text-neutral-800 dark:text-neutral-200">
@@ -39,44 +17,32 @@ export default function LogIn() {
         Create an account if you don&apos;t have one already
       </p>
 
-      <form className="my-8">
+      <form className="my-8" action={action}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
             id="email"
             placeholder="Enter email address here"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
           />
+          {state?.errors?.email && <p>{state.errors.email}</p>}
         </LabelInputContainer>
-        <div className="w-full text-center">OR</div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="username">Username</Label>
-          <Input
-            id="username"
-            placeholder="Enter username here"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </LabelInputContainer>
-
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
             placeholder="Enter password here"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
           />
+          {state?.errors?.password && <p>Password is incorrect</p>}
         </LabelInputContainer>
 
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
-          onClick={(e) => handleSubmit(e)}
+          disabled={pending}
         >
           Log in &rarr;
           <BottomGradient />

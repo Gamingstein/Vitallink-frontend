@@ -3,18 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useRouter } from "next/navigation";
+import { IconLogout } from "@tabler/icons-react";
+import { logout } from "@/app/actions/auth";
+import { useRecoilValue } from "recoil";
+import { userState, User } from "@/lib/state";
 
-export type User = {
-  id: string;
-  username: string;
-  email: string;
-  avatar: string;
-} | null;
-
-const Navbar = ({ user }: { user: User }) => {
+const Navbar = ({ isUserLoggedIn }: { isUserLoggedIn: boolean }) => {
+  const user = useRecoilValue<User>(userState);
   const router = useRouter();
   return (
-    <nav className="fixed top-0 left-0 w-full z-10 bg-background dark:bg-primary-foreground backdrop-opacity-10 backdrop-blur-xl px-64 flex justify-between border-b-white">
+    <nav className="fixed top-0 left-0 w-full z-10 bg-muted dark:bg-primary-foreground backdrop-opacity-10 backdrop-blur-xl px-64 flex justify-between border-b-white">
       <Image
         src={"/assets/logo.png"}
         width={400}
@@ -25,15 +23,19 @@ const Navbar = ({ user }: { user: User }) => {
           router.push("/home");
         }}
       />
-      {user ? (
+      {isUserLoggedIn ? (
         <div className={`flex gap-8 items-center justify-end`}>
           <Avatar>
             <AvatarImage src={user?.avatar} />
-            <AvatarFallback>{user?.username[0]}</AvatarFallback>
+            <AvatarFallback>{user?.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
-          <Link href={"#"} className="text-foreground font-bold">
-            Logout
-          </Link>
+          <button
+            onClick={async () => {
+              await logout();
+            }}
+          >
+            <IconLogout className="size-6 text-foreground" />
+          </button>
         </div>
       ) : (
         <div className={`flex gap-8 items-center justify-end`}>

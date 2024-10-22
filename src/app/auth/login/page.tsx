@@ -1,4 +1,4 @@
-import LogIn from "@/components/forms/login-form";
+import LoginForm from "@/components/forms/login-form";
 
 export const metadata = {
   title: "Login Page",
@@ -8,7 +8,7 @@ export const metadata = {
 export default function LogInPage() {
   return (
     <div className="h-full flex justify-center items-center flex-col">
-      <LogIn />
+      <LoginForm />
     </div>
   );
 }
