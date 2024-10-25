@@ -5,11 +5,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useRouter } from "next/navigation";
 import { IconLogout } from "@tabler/icons-react";
 import { logout } from "@/app/actions/auth";
-import { useRecoilValue } from "recoil";
-import { userState, User } from "@/lib/state";
+import { UserType, useUserStore } from "@/store/user";
+// import { useEffect } from "react";
 
-const Navbar = ({ isUserLoggedIn }: { isUserLoggedIn: boolean }) => {
-  const user = useRecoilValue<User>(userState);
+const Navbar = ({ user }: { user: UserType }) => {
+  const removeUser = useUserStore((state) => state?.removeUser);
+  const isUserLoggedIn = user.name === "" ? false : true;
   const router = useRouter();
   return (
     <nav className="fixed top-0 left-0 w-full z-10 bg-muted dark:bg-primary-foreground backdrop-opacity-10 backdrop-blur-xl px-64 flex justify-between border-b-white">
@@ -23,14 +24,18 @@ const Navbar = ({ isUserLoggedIn }: { isUserLoggedIn: boolean }) => {
           router.push("/home");
         }}
       />
+
       {isUserLoggedIn ? (
         <div className={`flex gap-8 items-center justify-end`}>
           <Avatar>
             <AvatarImage src={user?.avatar} />
-            <AvatarFallback>{user?.username[0].toUpperCase()}</AvatarFallback>
+            <AvatarFallback>
+              {user?.username[0].toUpperCase() || "@"}
+            </AvatarFallback>
           </Avatar>
           <button
             onClick={async () => {
+              removeUser();
               await logout();
             }}
           >

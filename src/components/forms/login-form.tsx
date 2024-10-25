@@ -1,13 +1,14 @@
 "use client";
+import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 
 export default function LoginForm() {
   const { pending } = useFormStatus();
-  const [state, action] = useFormState(login, undefined);
+  const [state, action] = useActionState(login, undefined);
   return (
     <div className="max-w-[600px] w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-2xl text-neutral-800 dark:text-neutral-200">

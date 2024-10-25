@@ -13,14 +13,14 @@ import { cn } from "@/lib/utils";
 import { FileUpload } from "../ui/file-upload";
 import { Switch } from "../ui/switch";
 import { signup } from "@/app/actions/auth";
-import { useFormState, useFormStatus } from "react-dom";
-import React, { useState } from "react";
+import { useFormStatus } from "react-dom";
+import React, { useActionState, useState } from "react";
 
 export function SignupForm() {
   const { pending } = useFormStatus();
   const [files, setFiles] = useState<File[]>([]);
   const [isDoctor, setIsDoctor] = useState(false);
-  const [state, action] = useFormState(signup, undefined);
+  const [state, action] = useActionState(signup, undefined);
   const handleFileUpload = (files: File[]) => {
     setFiles(files);
   };

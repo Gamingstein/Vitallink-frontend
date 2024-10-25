@@ -1,5 +1,5 @@
 "use server";
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import {
   SignupFormSchema,
   FormState,
@@ -9,6 +9,7 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 export async function signup(state: FormState, formData: FormData) {
+  let redirectPath;
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     firstname: formData.get("firstname"),
@@ -29,32 +30,32 @@ export async function signup(state: FormState, formData: FormData) {
   const data = validatedFields.data;
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
-      payload.append(key, data[key]);
+      payload.append(key, data[key as keyof typeof data]);
     }
   }
-  payload.append("fullName", `${data.firstname} ${data.lastname}`);
+  payload.append("name", `${data.firstname} ${data.lastname}`);
   payload.append("avatar", formData.get("avatar") as Blob);
   console.log("Validated fields", payload);
-  const res = await axios.post(
-    "http://localhost:8000/api/v1/users/register",
-    payload,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  const res = await axios.post("http://localhost:8000/user/register", payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
     },
-  );
+  });
 
   if (res.status === 201) {
-    redirect("/home");
+    redirectPath = "/auth/login";
   } else {
+    redirectPath = "/auth/signup";
     console.log("error");
   }
+  permanentRedirect(redirectPath);
+
   // Call the provider or db to create a user...
 }
 
 export async function login(state: FormState, formData: FormData) {
   // Validate form fields
+  let redirectPath;
   const validatedFields = LoginFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -68,7 +69,7 @@ export async function login(state: FormState, formData: FormData) {
   }
 
   const res = await axios.post(
-    "http://localhost:8000/api/v1/users/login",
+    "http://localhost:8000/user/login",
     validatedFields.data,
   );
 
@@ -88,18 +89,18 @@ export async function login(state: FormState, formData: FormData) {
       expires: refreshExpiresAt,
       sameSite: "none",
     });
-
-    redirect("/home");
+    redirectPath = "/home";
   } else {
+    redirectPath = "/auth/login";
     console.log("error");
   }
-  // Call the provider or db to login a user...
+  permanentRedirect(redirectPath);
 }
 
 export async function logout() {
   const cookiesStore = await cookies();
   const res = await axios.post(
-    "http://localhost:8000/api/v1/users/logout",
+    "http://localhost:8000/user/logout",
     { hello: "world" },
     {
       headers: {
@@ -110,27 +111,27 @@ export async function logout() {
   if (res.status === 200) {
     cookiesStore.delete("accessToken");
     cookiesStore.delete("refreshToken");
-    redirect("/auth/login");
   }
+  permanentRedirect("/home");
 }
 
 export async function getCurrentUser() {
   const cookiesStore = await cookies();
+  if (!cookiesStore.has("accessToken")) {
+    return { user: null, error: "No access token found" };
+  }
   try {
-    const res = await axios.get(
-      "http://localhost:8000/api/v1/users/current-user",
-      {
-        headers: {
-          cookie: cookiesStore.toString(),
-        },
+    const res = await axios.get("http://localhost:8000/user/me", {
+      headers: {
+        cookie: cookiesStore.toString(),
       },
-    );
+    });
     if (res.status === 200) {
-      return res.data?.data?.user;
+      return { user: res.data?.data, error: null };
     } else {
-      return null;
+      return { user: null, error: res.data?.error || null };
     }
   } catch (error) {
-    return null;
+    return { user: null, error: error };
   }
 }

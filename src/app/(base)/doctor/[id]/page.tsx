@@ -7,8 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { use } from "react";
 
-const Page = ({ params }: { params: { id: string } }) => {
+type Params = Promise<{ id: string }>;
+
+const Page = (props: { params: Params }) => {
+  const params = use(props.params);
   const data = [
     { id: 1, name: "John Doe", age: 25 },
     { id: 2, name: "Jane Doe", age: 26 },
@@ -23,6 +27,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   ];
   return (
     <div className="p-32">
+      <h2 className="mb-4 text-foreground">{params.id}</h2>
       <Table>
         <TableCaption>A list of Patients</TableCaption>
         <TableHeader>

@@ -1,20 +1,14 @@
 "use client";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { userState } from "@/lib/state";
-import { useSetRecoilState } from "recoil";
+import { useUserStore } from "@/store/user";
 import { useEffect } from "react";
-import { getCurrentUser } from "@/app/actions/auth";
 
 export default function Home() {
-  const setUser = useSetRecoilState(userState);
+  const getUser = useUserStore((state) => state?.getUser);
   useEffect(() => {
-    const getUser = async () => {
-      const user = await getCurrentUser();
-      setUser(user);
-    };
     getUser();
-  }, []);
+  });
   return (
     <BackgroundLines>
       <div className="h-full w-full flex flex-col justify-center items-center">
