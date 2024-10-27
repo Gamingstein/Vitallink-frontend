@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { IconLogout } from "@tabler/icons-react";
 import { logout } from "@/app/actions/auth";
 import { UserType, useUserStore } from "@/store/user";
-// import { useEffect } from "react";
 
 const Navbar = ({ user }: { user: UserType }) => {
   const removeUser = useUserStore((state) => state?.removeUser);

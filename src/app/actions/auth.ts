@@ -89,7 +89,7 @@ export async function login(state: FormState, formData: FormData) {
       expires: refreshExpiresAt,
       sameSite: "none",
     });
-    redirectPath = "/home";
+    redirectPath = "/dashboard";
   } else {
     redirectPath = "/auth/login";
     console.log("error");

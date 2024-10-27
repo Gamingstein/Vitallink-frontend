@@ -17,7 +17,7 @@ export type UserStore = {
 };
 
 export const useUserStore = create(
-  persist(
+  persist<UserStore>(
     (set, get) => ({
       user: {
         name: "",
