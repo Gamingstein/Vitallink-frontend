@@ -46,7 +46,7 @@ export async function signup(state: FormState, formData: FormData) {
     redirectPath = "/auth/login";
   } else {
     redirectPath = "/auth/signup";
-    console.log("error");
+    console.log(res.data);
   }
   permanentRedirect(redirectPath);
 
@@ -92,7 +92,7 @@ export async function login(state: FormState, formData: FormData) {
     redirectPath = "/dashboard";
   } else {
     redirectPath = "/auth/login";
-    console.log("error");
+    console.log(res.data);
   }
   permanentRedirect(redirectPath);
 }
@@ -111,8 +111,9 @@ export async function logout() {
   if (res.status === 200) {
     cookiesStore.delete("accessToken");
     cookiesStore.delete("refreshToken");
+  } else {
+    console.log(res.data);
   }
-  permanentRedirect("/home");
 }
 
 export async function getCurrentUser() {

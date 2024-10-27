@@ -1,15 +1,21 @@
 "use client";
 import { useUserStore } from "@/store/user";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
+import HospitalDashboard from "@/components/dashboards/HospitalDashboard";
+import DoctorDashboard from "@/components/dashboards/DoctorDashboard";
+
 const DashboardPage = () => {
-  const getUser = useUserStore((state) => state?.getUser);
-  useEffect(() => {
+  const { user, getUser } = useUserStore();
+
+  useLayoutEffect(() => {
     getUser();
   });
+
   return (
-    <div className="h-full flex flex-col justify-center items-center gap-5">
-      <h1>Dashboard</h1>
+    <div className="h-full flex justify-center items-center pt-16">
+      {user.isAdmin ? <HospitalDashboard /> : <DoctorDashboard />}
     </div>
   );
 };
+
 export default DashboardPage;
