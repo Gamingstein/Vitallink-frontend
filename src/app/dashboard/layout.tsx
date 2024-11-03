@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/components/Navbar";
 import { useUserStore } from "@/store/user";
+import { useLayoutEffect } from "react";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
@@ -13,7 +14,12 @@ export default function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = useUserStore((state) => state?.user);
+  const { user, getUser } = useUserStore();
+
+  useLayoutEffect(() => {
+    getUser();
+  });
+
   return (
     <section className="h-dvh">
       <Navbar user={user} />

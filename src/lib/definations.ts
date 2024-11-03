@@ -35,6 +35,19 @@ export const LoginFormSchema = z.object({
     .trim(),
 });
 
+export const RegisterPatientSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters long." })
+    .trim(),
+  age: z.number().int().min(1, { message: "Age must be at least 1." }),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]),
+  aadhaar: z.string().length(12, { message: "Aadhaar must be 12 characters." }),
+  sensorID: z
+    .string()
+    .length(24, { message: "Sensor ID must be 24 characters." }),
+});
+
 export type FormState =
   | {
       errors?: {

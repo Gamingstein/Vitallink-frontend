@@ -8,6 +8,8 @@ export type UserType = {
   avatar: string;
   isAdmin: boolean;
   username: string;
+  doctor?: { id: string };
+  hospital?: { id: string };
 };
 
 export type UserStore = {
@@ -20,11 +22,17 @@ export const useUserStore = create(
   persist<UserStore>(
     (set, get) => ({
       user: {
-        name: "",
-        email: "",
+        name: "Dr. John Doe",
         avatar: "",
+        email: "",
+        username: "johndoe",
         isAdmin: false,
-        username: "",
+        doctor: {
+          id: "671a1d41b1efa6c38af82b23",
+        },
+        hospital: {
+          id: "671a1c7cb1efa6c38af82b1f",
+        },
       },
       getUser: async () => {
         if ((get() as UserStore).user.name !== "") {
