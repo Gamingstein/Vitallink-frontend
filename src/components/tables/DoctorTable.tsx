@@ -39,11 +39,14 @@ import { useUserStore } from "@/store/user";
 
 export type Doctor = {
   id: string;
-  name: string;
-  age: number;
   gender: "MALE" | "FEMALE" | "OTHER";
-  aadhaar: string;
-  admitted: boolean;
+  specifications: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    username: string;
+  };
 };
 
 export const columns: ColumnDef<Doctor>[] = [
@@ -70,6 +73,7 @@ export const columns: ColumnDef<Doctor>[] = [
     enableHiding: false,
   },
   {
+    accessorFn: (doctor) => doctor.user.name,
     accessorKey: "name",
     header: ({ column }) => {
       return (
@@ -92,31 +96,17 @@ export const columns: ColumnDef<Doctor>[] = [
     ),
   },
   {
-    accessorKey: "age",
-    header: "Age",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("age")}</div>,
-  },
-  {
-    accessorKey: "aadhaar",
-    header: "Aadhaar",
+    accessorKey: "specifications",
+    header: "Specifications",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("aadhaar")}</div>
-    ),
-  },
-  {
-    accessorKey: "admitted",
-    header: "Admitted",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {row.getValue("admitted") ? "Yes" : "No"}
-      </div>
+      <div className="capitalize">{row.getValue("specifications")}</div>
     ),
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const patient = row.original;
+      const doctor = row.original;
 
       return (
         <DropdownMenu>
@@ -129,13 +119,12 @@ export const columns: ColumnDef<Doctor>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(patient.id)}
+              onClick={() => navigator.clipboard.writeText(doctor.id)}
             >
-              Copy patient ID
+              Copy doctor ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View patient</DropdownMenuItem>
-            <DropdownMenuItem>View patient report</DropdownMenuItem>
+            <DropdownMenuItem>Remove doctor</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -181,14 +170,6 @@ export function DoctorTable({ data }: { data: Doctor[] }) {
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Search aadhaar..."
-          value={(table.getColumn("aadhaar")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("aadhaar")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

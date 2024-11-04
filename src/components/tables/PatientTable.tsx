@@ -135,8 +135,13 @@ export const columns: ColumnDef<Patient>[] = [
               Copy patient ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View patient</DropdownMenuItem>
-            <DropdownMenuItem>View patient report</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                console.log("View patient report");
+              }}
+            >
+              View patient report
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
