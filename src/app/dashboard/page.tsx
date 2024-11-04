@@ -7,13 +7,7 @@ const DashboardPage = () => {
   const user = useUserStore((state) => state.user);
 
   return (
-    <>
-      {user.isAdmin ? (
-        <HospitalDashboardPage user={user} />
-      ) : (
-        <DoctorDashboardPage user={user} />
-      )}
-    </>
+    <>{user.isAdmin ? <HospitalDashboardPage /> : <DoctorDashboardPage />}</>
   );
 };
 

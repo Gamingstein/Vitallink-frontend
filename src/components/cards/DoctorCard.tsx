@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -6,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
 export default function DoctorCard() {

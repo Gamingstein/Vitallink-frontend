@@ -40,8 +40,8 @@ export default function InfoCard({ id }: { id: string }) {
   });
   return (
     <div className="">
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
+      {loading && <p className="text-5xl">Loading...</p>}
+      {error && <p className="text-red-400">Error: {error.message}</p>}
       {data && (
         <Card className="bg-muted w-96">
           <CardHeader>

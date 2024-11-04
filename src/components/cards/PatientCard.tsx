@@ -6,7 +6,7 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
 export default function PatientCard() {
