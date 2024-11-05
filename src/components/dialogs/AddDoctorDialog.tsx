@@ -26,37 +26,27 @@ import { Label } from "@/components/ui/label";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
-const doctors = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
+type Doctor = {
+  id: string;
+  user: {
+    name: string;
+  };
+};
 
-export function AddDoctorDialog() {
+export function AddDoctorDialog({ data: doctors }: { data: Doctor[] }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const { toast } = useToast();
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("hello", value);
+    //backend call to add doctor
+    toast({
+      title: "Doctor added successfully!",
+      description: `Number ${value} doctor is added to the hospital.`,
+    });
   }
 
   return (
@@ -86,7 +76,7 @@ export function AddDoctorDialog() {
                     className="w-[200px] justify-between"
                   >
                     {value
-                      ? doctors.find((doctor) => doctor.value === value)?.label
+                      ? doctors.find((doctor) => doctor.id === value)?.user.name
                       : "Select doctor..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
@@ -99,11 +89,11 @@ export function AddDoctorDialog() {
                       <CommandGroup>
                         {doctors.map((doctor) => (
                           <CommandItem
-                            key={doctor.value}
-                            value={doctor.value}
+                            key={doctor.id}
+                            value={doctor.id}
                             onSelect={(currentValue) => {
                               setValue(
-                                currentValue === value ? "" : currentValue,
+                                currentValue === value ? "" : currentValue
                               );
                               setOpen(false);
                             }}
@@ -111,12 +101,12 @@ export function AddDoctorDialog() {
                             <Check
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                value === doctor.value
+                                value === doctor.id
                                   ? "opacity-100"
-                                  : "opacity-0",
+                                  : "opacity-0"
                               )}
                             />
-                            {doctor.label}
+                            {doctor.user.name}
                           </CommandItem>
                         ))}
                       </CommandGroup>

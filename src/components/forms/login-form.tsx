@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useFormStatus } from "react-dom";
+import Link from "next/link";
 
 export default function LoginForm() {
-  const { pending } = useFormStatus();
   const [state, action] = useActionState(login, undefined);
   return (
     <div className="max-w-[600px] w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -40,14 +40,7 @@ export default function LoginForm() {
           {state?.errors?.password && <p>Password is incorrect</p>}
         </LabelInputContainer>
 
-        <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
-          disabled={pending}
-        >
-          Log in &rarr;
-          <BottomGradient />
-        </button>
+        <Submit />
       </form>
       {/* <div className="text-center mt-4">
         <a
@@ -59,12 +52,12 @@ export default function LoginForm() {
       </div> */}
       <div className="text-center text-neutral-600 dark:text-neutral-300">
         Don&apos;t have an account?{" "}
-        <a
+        <Link
           href="/auth/signup"
           className="text-cyan-600 dark:text-cyan-400 font-medium hover:underline"
         >
           Sign up
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -90,5 +83,19 @@ const LabelInputContainer = ({
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
       {children}
     </div>
+  );
+};
+
+const Submit = () => {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+      type="submit"
+      disabled={pending}
+    >
+      {pending ? "Logging in..." : "Login"}
+      <BottomGradient />
+    </button>
   );
 };

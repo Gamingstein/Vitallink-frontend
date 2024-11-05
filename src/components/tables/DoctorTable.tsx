@@ -35,7 +35,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AddDoctorDialog } from "../dialogs/AddDoctorDialog";
-import { useUserStore } from "@/store/user";
+// import { useUserStore } from "@/store/user";
 
 export type Doctor = {
   id: string;
@@ -133,11 +133,11 @@ export const columns: ColumnDef<Doctor>[] = [
 ];
 
 export function DoctorTable({ data }: { data: Doctor[] }) {
-  const user = useUserStore((state) => state.user);
+  // const user = useUserStore((state) => state.user);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+    []
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -173,7 +173,7 @@ export function DoctorTable({ data }: { data: Doctor[] }) {
           }
           className="max-w-sm"
         />
-        {!user.isAdmin && <AddDoctorDialog />}
+        <AddDoctorDialog />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -213,7 +213,7 @@ export function DoctorTable({ data }: { data: Doctor[] }) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   );
@@ -232,7 +232,7 @@ export function DoctorTable({ data }: { data: Doctor[] }) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

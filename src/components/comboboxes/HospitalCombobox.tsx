@@ -42,7 +42,7 @@ const hospitals = [
   },
 ];
 
-export function ComboboxDemo() {
+export function HospitalCombobox() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -79,7 +79,7 @@ export function ComboboxDemo() {
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === hospital.value ? "opacity-100" : "opacity-0",
+                      value === hospital.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                   {hospital.label}

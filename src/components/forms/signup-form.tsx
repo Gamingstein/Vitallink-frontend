@@ -15,9 +15,9 @@ import { Switch } from "../ui/switch";
 import { signup } from "@/app/actions/auth";
 import { useFormStatus } from "react-dom";
 import React, { useActionState, useState } from "react";
+import Link from "next/link";
 
 export function SignupForm() {
-  const { pending } = useFormStatus();
   const [files, setFiles] = useState<File[]>([]);
   const [isDoctor, setIsDoctor] = useState(false);
   const [state, action] = useActionState(signup, undefined);
@@ -156,23 +156,16 @@ export function SignupForm() {
             </LabelInputContainer>
           </div>
         )}
-        <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
-          disabled={pending}
-        >
-          Sign up &rarr;
-          <BottomGradient />
-        </button>
+        <Submit />
       </form>
       <div className="text-center text-neutral-600 dark:text-neutral-300">
         Already have an account?{" "}
-        <a
+        <Link
           href="/auth/login"
           className="text-cyan-600 dark:text-cyan-400 font-medium hover:underline"
         >
           Login
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -198,5 +191,19 @@ const LabelInputContainer = ({
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
       {children}
     </div>
+  );
+};
+
+const Submit = () => {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+      type="submit"
+      disabled={pending}
+    >
+      {pending ? "Signing up..." : "Sign Up"}
+      <BottomGradient />
+    </button>
   );
 };
