@@ -40,8 +40,6 @@ const DoctorDashboardPage = () => {
         </h2>
       </div>
     );
-  } else {
-    console.log(data.patientsbydoctor);
   }
   return (
     <div className="h-full flex justify-center items-start pt-16">

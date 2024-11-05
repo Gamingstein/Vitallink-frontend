@@ -1,5 +1,5 @@
-import DoctorCard from "../cards/DoctorCard";
-import PatientCard from "../cards/PatientCard";
+import DoctorCard from "@/components/cards/DoctorCard";
+import PatientCard from "@/components/cards/PatientCard";
 
 const HospitalDashboardPage = () => {
   return (

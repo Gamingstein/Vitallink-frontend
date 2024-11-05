@@ -45,7 +45,6 @@ const HospitalPatientPage = () => {
   }
   return (
     <div className="h-full flex flex-col justify-start items-center pt-16">
-      <h1 className="text-4xl font-bold py-8">Hospital&apos;s Patients</h1>
       <PatientTable data={data.patientsbyhospital} />
     </div>
   );
