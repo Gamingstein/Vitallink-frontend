@@ -22,10 +22,10 @@ export const useUserStore = create(
   persist<UserStore>(
     (set, get) => ({
       user: {
-        name: "Dr. John Doe",
+        name: "",
         avatar: "",
         email: "",
-        username: "johndoe",
+        username: "",
         isAdmin: false,
         doctor: {
           id: "671a1d41b1efa6c38af82b23",
@@ -70,6 +70,6 @@ export const useUserStore = create(
     }),
     {
       name: "user", // name of the item in the storage (must be unique)
-    },
-  ),
+    }
+  )
 );

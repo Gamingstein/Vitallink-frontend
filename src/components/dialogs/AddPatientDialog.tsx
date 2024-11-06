@@ -28,13 +28,29 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
+import { gql, useQuery } from "@apollo/client";
 
 type Hospital = {
   id: string;
   user: { name: string };
 };
 
-export function AddPatientDialog({ data: hospitals }: { data: Hospital[] }) {
+const GET_HOSPITALS = gql`
+  query Hospitalsbydoctor($hospitalsbydoctorId: ID!) {
+    hospitalsbydoctor(id: $hospitalsbydoctorId) {
+      id
+      user {
+        name
+      }
+    }
+  }
+`;
+
+export function AddPatientDialog() {
+  const { data, loading, error } = useQuery(GET_HOSPITALS, {
+    variables: { hospitalsbydoctorId: "671a1d41b1efa6c38af82b23" },
+  });
+  const hospitals = data?.hospitalsbydoctor;
   const [value, setValue] = useState("");
   const [patient, setPatient] = useState("");
   const [open, setOpen] = useState(false);
@@ -45,10 +61,14 @@ export function AddPatientDialog({ data: hospitals }: { data: Hospital[] }) {
     toast({
       title: "Patient added successfully!",
       description: `Patient with aadhaar "${patient}" from "${
-        hospitals.find((hospital) => hospital.id === value)?.user.name
+        hospitals.find((hospital: Hospital) => hospital.id === value)?.user.name
       }" has been added to your care.`,
     });
   }
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -77,8 +97,9 @@ export function AddPatientDialog({ data: hospitals }: { data: Hospital[] }) {
                     className="w-[200px] justify-between"
                   >
                     {value
-                      ? hospitals.find((hospital) => hospital.id === value)
-                          ?.user.name
+                      ? hospitals.find(
+                          (hospital: Hospital) => hospital.id === value
+                        )?.user.name
                       : "Select hospital..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
@@ -89,7 +110,7 @@ export function AddPatientDialog({ data: hospitals }: { data: Hospital[] }) {
                     <CommandList>
                       <CommandEmpty>No hospital found.</CommandEmpty>
                       <CommandGroup>
-                        {hospitals.map((hospital) => (
+                        {hospitals.map((hospital: Hospital) => (
                           <CommandItem
                             key={hospital.id}
                             value={hospital.id}

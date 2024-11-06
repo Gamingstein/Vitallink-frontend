@@ -27,6 +27,8 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { gql, useQuery } from "@apollo/client";
+import { useUserStore } from "@/store/user";
 
 type Doctor = {
   id: string;
@@ -35,7 +37,25 @@ type Doctor = {
   };
 };
 
-export function AssignDoctorDialog({ data: doctors }: { data: Doctor[] }) {
+const GET_DOCTORS = gql`
+  query Doctorsbyhospital($doctorsbyhospitalId: ID!) {
+    doctorsbyhospital(id: $doctorsbyhospitalId) {
+      id
+      user {
+        name
+      }
+    }
+  }
+`;
+
+export function AssignDoctorDialog() {
+  const user = useUserStore((state) => state.user);
+  const { data, loading, error } = useQuery(GET_DOCTORS, {
+    variables: {
+      doctorsbyhospitalId: user.hospital?.id || "671a1c7cb1efa6c38af82b1f",
+    },
+  });
+  const doctors = data?.doctorsbyhospital;
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const { toast } = useToast();
@@ -47,6 +67,15 @@ export function AssignDoctorDialog({ data: doctors }: { data: Doctor[] }) {
       title: "Doctor assigned successfully!",
       description: `Number ${value} doctor is assigned to the patient.`,
     });
+  }
+
+  if (loading) {
+    console.log(user.hospital?.id);
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    console.error(error);
+    return <p>Error :(</p>;
   }
 
   return (
@@ -76,7 +105,8 @@ export function AssignDoctorDialog({ data: doctors }: { data: Doctor[] }) {
                     className="w-[200px] justify-between"
                   >
                     {value
-                      ? doctors.find((doctor) => doctor.id === value)?.user.name
+                      ? doctors.find((doctor: Doctor) => doctor.id === value)
+                          ?.user.name
                       : "Select doctor..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
@@ -87,7 +117,7 @@ export function AssignDoctorDialog({ data: doctors }: { data: Doctor[] }) {
                     <CommandList>
                       <CommandEmpty>No doctor found.</CommandEmpty>
                       <CommandGroup>
-                        {doctors.map((doctor) => (
+                        {doctors.map((doctor: Doctor) => (
                           <CommandItem
                             key={doctor.id}
                             value={doctor.id}

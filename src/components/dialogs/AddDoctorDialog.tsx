@@ -27,6 +27,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { gql, useQuery } from "@apollo/client";
 
 type Doctor = {
   id: string;
@@ -35,7 +36,20 @@ type Doctor = {
   };
 };
 
-export function AddDoctorDialog({ data: doctors }: { data: Doctor[] }) {
+const GET_DOCTORS = gql`
+  query Doctors {
+    doctors {
+      id
+      user {
+        name
+      }
+    }
+  }
+`;
+
+export function AddDoctorDialog() {
+  const { data, loading, error } = useQuery(GET_DOCTORS);
+  const doctors = data?.doctors;
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const { toast } = useToast();
@@ -47,6 +61,14 @@ export function AddDoctorDialog({ data: doctors }: { data: Doctor[] }) {
       title: "Doctor added successfully!",
       description: `Number ${value} doctor is added to the hospital.`,
     });
+  }
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    console.error(error);
+    return <p>Error :(</p>;
   }
 
   return (
@@ -76,7 +98,8 @@ export function AddDoctorDialog({ data: doctors }: { data: Doctor[] }) {
                     className="w-[200px] justify-between"
                   >
                     {value
-                      ? doctors.find((doctor) => doctor.id === value)?.user.name
+                      ? doctors.find((doctor: Doctor) => doctor.id === value)
+                          ?.user.name
                       : "Select doctor..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
@@ -87,7 +110,7 @@ export function AddDoctorDialog({ data: doctors }: { data: Doctor[] }) {
                     <CommandList>
                       <CommandEmpty>No doctor found.</CommandEmpty>
                       <CommandGroup>
-                        {doctors.map((doctor) => (
+                        {doctors.map((doctor: Doctor) => (
                           <CommandItem
                             key={doctor.id}
                             value={doctor.id}
