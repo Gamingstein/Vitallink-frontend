@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -8,8 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function PatientCard() {
+export default function PatientCard({ count }: { count: number }) {
+  const router = useRouter();
   return (
     <Card className="bg-muted w-96">
       <CardHeader>
@@ -17,10 +20,15 @@ export default function PatientCard() {
         <CardDescription>Number of Admitted patients</CardDescription>
       </CardHeader>
       <CardContent>
-        <h1 className="text-7xl font-bold text-center">100</h1>
+        <h1 className="text-7xl font-bold text-center">{count}</h1>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button variant={"outline"}>
+        <Button
+          variant={"outline"}
+          onClick={() => {
+            router.push("/dashboard/patients");
+          }}
+        >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </CardFooter>

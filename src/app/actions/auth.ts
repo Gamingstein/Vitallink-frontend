@@ -49,8 +49,6 @@ export async function signup(state: FormState, formData: FormData) {
     console.log(res.data);
   }
   permanentRedirect(redirectPath);
-
-  // Call the provider or db to create a user...
 }
 
 export async function login(state: FormState, formData: FormData) {
@@ -70,7 +68,7 @@ export async function login(state: FormState, formData: FormData) {
 
   const res = await axios.post(
     "http://localhost:8000/user/login",
-    validatedFields.data,
+    validatedFields.data
   );
 
   if (res.status === 200) {
@@ -101,12 +99,12 @@ export async function logout() {
   const cookiesStore = await cookies();
   const res = await axios.post(
     "http://localhost:8000/user/logout",
-    { hello: "world" },
+    { moye: "moye" },
     {
       headers: {
         cookie: cookiesStore.toString(),
       },
-    },
+    }
   );
   if (res.status === 200) {
     cookiesStore.delete("accessToken");

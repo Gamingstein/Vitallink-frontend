@@ -8,8 +8,8 @@ export type UserType = {
   avatar: string;
   isAdmin: boolean;
   username: string;
-  doctor?: { id: string };
-  hospital?: { id: string };
+  doctor?: { id: string | null };
+  hospital?: { id: string | null };
 };
 
 export type UserStore = {
@@ -28,10 +28,10 @@ export const useUserStore = create(
         username: "",
         isAdmin: false,
         doctor: {
-          id: "671a1d41b1efa6c38af82b23",
+          id: "",
         },
         hospital: {
-          id: "671a1c7cb1efa6c38af82b1f",
+          id: "",
         },
       },
       getUser: async () => {
@@ -52,6 +52,12 @@ export const useUserStore = create(
               avatar: "",
               isAdmin: false,
               username: "",
+              doctor: {
+                id: null,
+              },
+              hospital: {
+                id: null,
+              },
             },
           });
         }
@@ -64,6 +70,12 @@ export const useUserStore = create(
             avatar: "",
             isAdmin: false,
             username: "",
+            doctor: {
+              id: null,
+            },
+            hospital: {
+              id: null,
+            },
           },
         });
       },

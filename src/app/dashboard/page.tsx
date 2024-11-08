@@ -6,9 +6,7 @@ import { useUserStore } from "@/store/user";
 const DashboardPage = () => {
   const user = useUserStore((state) => state.user);
 
-  return (
-    <>{user.isAdmin ? <HospitalDashboardPage /> : <DoctorDashboardPage />}</>
-  );
+  return user.isAdmin ? <HospitalDashboardPage /> : <DoctorDashboardPage />;
 };
 
 export default DashboardPage;

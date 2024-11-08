@@ -39,7 +39,9 @@ export async function registerPatient(state: FormState, formData: FormData) {
         "Content-Type": "application/json",
         cookie: cookiesStore.toString(),
       },
-    },
+    }
   );
   console.log(res.data);
 }
+
+export async function dischargePatient() {}

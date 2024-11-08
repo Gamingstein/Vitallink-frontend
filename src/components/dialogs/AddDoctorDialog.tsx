@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { gql, useQuery } from "@apollo/client";
+import { addDoctorToHospital } from "@/app/actions/hospital";
 
 type Doctor = {
   id: string;
@@ -54,13 +55,22 @@ export function AddDoctorDialog() {
   const [value, setValue] = useState("");
   const { toast } = useToast();
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    //backend call to add doctor
-    toast({
-      title: "Doctor added successfully!",
-      description: `Number ${value} doctor is added to the hospital.`,
-    });
+    const payload = { doctorID: value };
+    const res = await addDoctorToHospital({ payload });
+    if (res.success) {
+      toast({
+        title: "Doctor added successfully!",
+        description: `Number ${value} doctor is added to the hospital.`,
+      });
+    } else {
+      toast({
+        title: "Failed to add doctor!",
+        description: `Number ${value} doctor is not added to the hospital.`,
+        variant: "destructive",
+      });
+    }
   }
 
   if (loading) {

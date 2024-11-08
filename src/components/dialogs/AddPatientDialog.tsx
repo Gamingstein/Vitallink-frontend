@@ -29,6 +29,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { gql, useQuery } from "@apollo/client";
+import { addPatientToDoctor } from "@/app/actions/doctor";
 
 type Hospital = {
   id: string;
@@ -56,14 +57,25 @@ export function AddPatientDialog() {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    toast({
-      title: "Patient added successfully!",
-      description: `Patient with aadhaar "${patient}" from "${
-        hospitals.find((hospital: Hospital) => hospital.id === value)?.user.name
-      }" has been added to your care.`,
-    });
+    const payload = { aadhaar: patient, hospitalID: value };
+    const res = await addPatientToDoctor({ payload });
+    if (!res.success) {
+      return toast({
+        title: "Failed to add patient!",
+        description: "An error occurred while adding the patient.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Patient added successfully!",
+        description: `Patient with aadhaar "${patient}" from "${
+          hospitals.find((hospital: Hospital) => hospital.id === value)?.user
+            .name
+        }" has been added to your care.`,
+      });
+    }
   }
 
   if (loading) return <p>Loading...</p>;
