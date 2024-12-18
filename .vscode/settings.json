@@ -1,0 +1,10 @@
+{
+  "vsmqtt.brokerProfiles": [
+    {
+      "name": "Vitallink",
+      "host": "ironraspi.local",
+      "port": 1883,
+      "clientId": "vsmqtt_client_9970"
+    }
+  ]
+}
