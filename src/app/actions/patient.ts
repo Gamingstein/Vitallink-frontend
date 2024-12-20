@@ -22,7 +22,7 @@ export async function registerPatient(state: FormState, formData: FormData) {
     name: formData.get("name"),
     age: parseInt(formData.get("age") as string),
     gender: (formData.get("gender") as string).toUpperCase(),
-    aadhaar: formData.get("aadhaar"),
+    aadhaar: parseInt(formData.get("aadhaar") as string),
     sensorID: formData.get("sensorID"),
   });
   if (!validatedFields.success) {
@@ -39,7 +39,7 @@ export async function registerPatient(state: FormState, formData: FormData) {
         "Content-Type": "application/json",
         cookie: cookiesStore.toString(),
       },
-    }
+    },
   );
   console.log(res.data);
 }

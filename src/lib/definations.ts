@@ -42,7 +42,9 @@ export const RegisterPatientSchema = z.object({
     .trim(),
   age: z.number().int().min(1, { message: "Age must be at least 1." }),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
-  aadhaar: z.string().length(12, { message: "Aadhaar must be 12 characters." }),
+  aadhaar: z
+    .number()
+    .min(101123456789, { message: "Aadhaar must be 12 characters." }),
   sensorID: z
     .string()
     .length(24, { message: "Sensor ID must be 24 characters." }),

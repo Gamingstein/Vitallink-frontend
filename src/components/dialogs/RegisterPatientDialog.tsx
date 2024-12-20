@@ -44,7 +44,7 @@ export function RegisterPatientDialog() {
 
   const { data, loading, error } = useQuery(GET_HOSPITAL_SENSORS, {
     variables: {
-      sensorsbyhospitalId: user.hospital?.id || "671a1d41b1efa6c38af82b23",
+      sensorsbyhospitalId: user.hospital?.id || "671a1c7cb1efa6c38af82b1f",
     },
   });
   const sensors = data?.sensorsbyhospital.filter(
@@ -127,7 +127,7 @@ export function RegisterPatientDialog() {
                 <SelectContent>
                   <SelectGroup>
                     {sensors?.map((sensor: Sensor) => (
-                      <SelectItem key={sensor.id} value={sensor.macAddress}>
+                      <SelectItem key={sensor.id} value={sensor.id}>
                         {sensor.macAddress}
                       </SelectItem>
                     ))}
