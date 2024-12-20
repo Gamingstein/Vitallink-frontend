@@ -30,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { gql, useQuery } from "@apollo/client";
 import { addPatientToDoctor } from "@/app/actions/doctor";
+import { useUserStore } from "@/store/user";
 
 type Hospital = {
   id: string;
@@ -48,8 +49,11 @@ const GET_HOSPITALS = gql`
 `;
 
 export function AddPatientDialog() {
+  const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_HOSPITALS, {
-    variables: { hospitalsbydoctorId: "671a1d41b1efa6c38af82b23" },
+    variables: {
+      hospitalsbydoctorId: user.doctor?.id || "671a1d41b1efa6c38af82b23",
+    },
   });
   const hospitals = data?.hospitalsbydoctor;
   const [value, setValue] = useState("");
@@ -110,7 +114,7 @@ export function AddPatientDialog() {
                   >
                     {value
                       ? hospitals.find(
-                          (hospital: Hospital) => hospital.id === value
+                          (hospital: Hospital) => hospital.id === value,
                         )?.user.name
                       : "Select hospital..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -128,7 +132,7 @@ export function AddPatientDialog() {
                             value={hospital.id}
                             onSelect={(currentValue) => {
                               setValue(
-                                currentValue === value ? "" : currentValue
+                                currentValue === value ? "" : currentValue,
                               );
                               setOpen(false);
                             }}
@@ -138,7 +142,7 @@ export function AddPatientDialog() {
                                 "mr-2 h-4 w-4",
                                 value === hospital.id
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {hospital.user.name}

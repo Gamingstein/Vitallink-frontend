@@ -20,10 +20,39 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState } from "react";
+import { gql, useQuery } from "@apollo/client";
 import { registerPatient } from "@/app/actions/patient";
+import { useUserStore } from "@/store/user";
+
+type Sensor = {
+  id: string;
+  macAddress: string;
+};
+
+const GET_HOSPITAL_SENSORS = gql`
+  query Sensorsbyhospital($sensorsbyhospitalId: ID!) {
+    sensorsbyhospital(id: $sensorsbyhospitalId) {
+      id
+      macAddress
+    }
+  }
+`;
 
 export function RegisterPatientDialog() {
+  const user = useUserStore((state) => state.user);
   const [state, action] = useActionState(registerPatient, undefined);
+
+  const { data, loading, error } = useQuery(GET_HOSPITAL_SENSORS, {
+    variables: {
+      sensorsbyhospitalId: user.hospital?.id || "671a1d41b1efa6c38af82b23",
+    },
+  });
+  const sensors = data?.sensorsbyhospital.filter(
+    (sensor: Sensor) => sensor.macAddress !== null,
+  );
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -91,7 +120,21 @@ export function RegisterPatientDialog() {
               <Label htmlFor="sensorID" className="text-right">
                 Sensor ID
               </Label>
-              <Input id="sensorID" type="text" name="sensorID" />
+              <Select name="sensorID">
+                <SelectTrigger className="w-2/3">
+                  <SelectValue placeholder="Select sensor" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {sensors?.map((sensor: Sensor) => (
+                      <SelectItem key={sensor.id} value={sensor.macAddress}>
+                        {sensor.macAddress}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {/* <Input id="sensorID" type="text" name="sensorID" /> */}
               {state?.errors?.sensorID && (
                 <p className="text-red-500 text-sm">{state.errors.sensorID}</p>
               )}
