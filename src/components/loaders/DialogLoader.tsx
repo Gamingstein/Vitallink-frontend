@@ -1,13 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function SkeletonDemo() {
+export function DialogLoader() {
   return (
     <div className="flex items-center space-x-4">
-      <Skeleton className="h-12 w-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
-      </div>
+      <Skeleton className="h-9 w-28 rounded-md inline-flex items-center justify-center">
+        Loading...
+      </Skeleton>
     </div>
   );
 }

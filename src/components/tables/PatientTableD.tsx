@@ -34,24 +34,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AddDoctorDialog } from "../dialogs/AddDoctorDialog";
-import { removeDoctorFromHospital } from "@/app/actions/hospital";
+import { AddPatientDialog } from "../dialogs/AddPatientDialog";
+import { useUserStore } from "@/store/user";
+import { RegisterPatientDialog } from "../dialogs/RegisterPatientDialog";
+import { redirect } from "next/navigation";
 import { toast } from "sonner";
-// import { useUserStore } from "@/store/user";
+import { removePatientFromDoctor } from "@/app/actions/doctor";
 
-export type Doctor = {
+export type Patient = {
   id: string;
+  name: string;
+  age: number;
   gender: "MALE" | "FEMALE" | "OTHER";
-  specification: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    username: string;
-  };
+  aadhaar: string;
+  admitted: boolean;
 };
 
-export const columns: ColumnDef<Doctor>[] = [
+export const columns: ColumnDef<Patient>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -75,7 +74,6 @@ export const columns: ColumnDef<Doctor>[] = [
     enableHiding: false,
   },
   {
-    accessorFn: (doctor) => doctor.user.name,
     accessorKey: "name",
     header: ({ column }) => {
       return (
@@ -101,12 +99,23 @@ export const columns: ColumnDef<Doctor>[] = [
     ),
   },
   {
-    accessorKey: "specification",
-    header: "Specification",
+    accessorKey: "age",
+    header: "Age",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("age")}</div>,
+  },
+  {
+    accessorKey: "aadhaar",
+    header: "Aadhaar",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("aadhaar")}</div>
+    ),
+  },
+  {
+    accessorKey: "admitted",
+    header: "Admitted",
     cell: ({ row }) => (
       <div className="capitalize">
-        {(row.getValue("specification") as string).charAt(0).toUpperCase() +
-          (row.getValue("specification") as string).slice(1).toLowerCase()}
+        {row.getValue("admitted") ? "Yes" : "No"}
       </div>
     ),
   },
@@ -114,7 +123,7 @@ export const columns: ColumnDef<Doctor>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const doctor = row.original;
+      const patient = row.original;
 
       return (
         <DropdownMenu>
@@ -127,28 +136,36 @@ export const columns: ColumnDef<Doctor>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(doctor.id)}
+              onClick={() => navigator.clipboard.writeText(patient.id)}
             >
-              Copy doctor ID
+              Copy patient ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                redirect(`/dashboard/patient/${patient.id}`);
+              }}
+            >
+              View patient report
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async () => {
-                const payload = { doctorID: doctor.id };
-                const res = await removeDoctorFromHospital({ payload });
+                const payload = { patientID: patient.id };
+                const res = await removePatientFromDoctor({ payload });
                 if (res.success) {
-                  toast.success("Doctor removed successfully", {
-                    description: `Dr.${doctor.user.name} has been removed from the hospital`,
+                  toast.success("Patient removed successfully", {
+                    description: `${patient.name} has been removed`,
                   });
                 } else {
-                  toast.error("Failed to remove doctor");
+                  toast.error("Failed to remove patinet");
                 }
                 setTimeout(() => {
                   window.location.reload();
                 }, 2000);
               }}
             >
-              Remove doctor
+              Remove patient
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -157,8 +174,8 @@ export const columns: ColumnDef<Doctor>[] = [
   },
 ];
 
-export function DoctorTable({ data }: { data: Doctor[] }) {
-  // const user = useUserStore((state) => state.user);
+export function PatientTableD({ data }: { data: Patient[] }) {
+  const user = useUserStore((state) => state.user);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -198,7 +215,15 @@ export function DoctorTable({ data }: { data: Doctor[] }) {
           }
           className="max-w-sm"
         />
-        <AddDoctorDialog />
+        <Input
+          placeholder="Search aadhaar..."
+          value={(table.getColumn("aadhaar")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("aadhaar")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        {user.isAdmin ? <RegisterPatientDialog /> : <AddPatientDialog />}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

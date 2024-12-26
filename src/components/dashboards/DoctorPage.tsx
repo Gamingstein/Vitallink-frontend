@@ -1,7 +1,8 @@
 "use client";
 import { useUserStore } from "@/store/user";
 import { useQuery, gql } from "@apollo/client";
-import { PatientTable } from "../tables/PatientTable";
+import { PatientTableLoader } from "../loaders/TableLoader";
+import { PatientTableD } from "../tables/PatientTableD";
 
 const GET_PATIENTS_BY_DOCTOR = gql`
   query Patientsbydoctor($patientsbydoctorId: ID!) {
@@ -23,27 +24,25 @@ const DoctorDashboardPage = () => {
   });
   if (loading) {
     return (
-      <div className="h-full flex flex-col justify-center items-center pt-16 gap-8">
-        <h1 className="text-6xl font-bold">Please wait!</h1>
-        <h2 className="text-3xl text-muted-foreground">
-          While we are fetching data
-        </h2>
+      <div className="h-full flex justify-center items-start pt-16">
+        <PatientTableLoader />
       </div>
     );
   }
   if (error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center pt-16 gap-8">
-        <h1 className="text-6xl font-bold">Oops!</h1>
-        <h2 className="text-3xl text-muted-foreground">
-          Error in fetching data
+      <div className="h-full flex flex-col justify-center items-center pt-16">
+        <h1 className="text-9xl font-bold font-number">Oops!!</h1>
+        <h1 className="text-7xl font-bold font-display">An Error Occurred!</h1>
+        <h2 className="text-3xl text-muted-foreground mt-20">
+          {error.message}
         </h2>
       </div>
     );
   }
   return (
     <div className="h-full flex justify-center items-start pt-16">
-      <PatientTable data={data.patientsbydoctor} />
+      <PatientTableD data={data.patientsbydoctor} />
     </div>
   );
 };

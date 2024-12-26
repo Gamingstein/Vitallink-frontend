@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -141,7 +142,11 @@ export function RegisterPatientDialog() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Register</Button>
+            <DialogClose asChild>
+              <Button variant="outline" type="submit">
+                Register
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

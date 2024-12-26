@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -29,9 +30,11 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { gql, useQuery } from "@apollo/client";
 import { addDoctorToHospital } from "@/app/actions/hospital";
+import { DialogLoader } from "../loaders/DialogLoader";
 
 type Doctor = {
   id: string;
+  specification: string;
   user: {
     name: string;
   };
@@ -41,6 +44,7 @@ const GET_DOCTORS = gql`
   query Doctors {
     doctors {
       id
+      specification
       user {
         name
       }
@@ -50,7 +54,7 @@ const GET_DOCTORS = gql`
 
 export function AddDoctorDialog() {
   const { data, loading, error } = useQuery(GET_DOCTORS);
-  const doctors = data?.doctors;
+  const doctors = data?.doctors as Doctor[];
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const { toast } = useToast();
@@ -62,19 +66,23 @@ export function AddDoctorDialog() {
     if (res.success) {
       toast({
         title: "Doctor added successfully!",
-        description: `Number ${value} doctor is added to the hospital.`,
+        description: `Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} is added to the hospital.`,
+        variant: "default",
       });
     } else {
       toast({
         title: "Failed to add doctor!",
-        description: `Number ${value} doctor is not added to the hospital.`,
+        description: `Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} doctor is not added to the hospital.`,
         variant: "destructive",
       });
     }
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <DialogLoader />;
   }
   if (error) {
     console.error(error);
@@ -126,7 +134,7 @@ export function AddDoctorDialog() {
                             value={doctor.id}
                             onSelect={(currentValue) => {
                               setValue(
-                                currentValue === value ? "" : currentValue
+                                currentValue === value ? "" : currentValue,
                               );
                               setOpen(false);
                             }}
@@ -136,10 +144,13 @@ export function AddDoctorDialog() {
                                 "mr-2 h-4 w-4",
                                 value === doctor.id
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {doctor.user.name}
+                            <br />➜
+                            {doctor.specification.charAt(0).toUpperCase() +
+                              doctor.specification.slice(1).toLowerCase()}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -150,7 +161,11 @@ export function AddDoctorDialog() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Add</Button>
+            <DialogClose asChild>
+              <Button variant="ghost" type="submit">
+                Add
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

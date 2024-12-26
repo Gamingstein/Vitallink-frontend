@@ -20,7 +20,7 @@ export default function DoctorCard({ count }: { count: number }) {
         <CardDescription>Number of doctors</CardDescription>
       </CardHeader>
       <CardContent>
-        <h1 className="text-center text-7xl font-bold">{count}</h1>
+        <h1 className="text-center text-7xl font-bold font-number">{count}</h1>
       </CardContent>
       <CardFooter className="flex justify-end">
         <Button

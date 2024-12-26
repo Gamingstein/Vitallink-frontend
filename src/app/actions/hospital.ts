@@ -2,13 +2,12 @@
 import axios from "axios";
 import { cookies } from "next/headers";
 
-const cookiesStore = await cookies();
-
 export async function addDoctorToHospital({
   payload,
 }: {
   payload: { doctorID: string };
 }) {
+  const cookiesStore = await cookies();
   try {
     const res = await axios.post(
       "http://localhost:8000/hospital/add-doc",
@@ -20,7 +19,7 @@ export async function addDoctorToHospital({
           "Content-Type": "application/json",
           cookie: cookiesStore.toString(),
         },
-      }
+      },
     );
     if (res.status === 200 || res.status === 201) return { success: true };
     else return { success: false };
@@ -35,6 +34,7 @@ export async function removeDoctorFromHospital({
 }: {
   payload: { doctorID: string };
 }) {
+  const cookiesStore = await cookies();
   try {
     const res = await axios.post(
       "http://localhost:8000/hospital/remove-doc",
@@ -46,7 +46,7 @@ export async function removeDoctorFromHospital({
           "Content-Type": "application/json",
           cookie: cookiesStore.toString(),
         },
-      }
+      },
     );
     if (res.status === 200 || res.status === 201) return { success: true };
     else return { success: false };
@@ -61,6 +61,7 @@ export async function assignDoctorToPatient({
 }: {
   payload: { doctorID: string; patientID: string };
 }) {
+  const cookiesStore = await cookies();
   try {
     const res = await axios.post(
       "http://localhost:8000/hospital/assign-doc",
@@ -73,10 +74,11 @@ export async function assignDoctorToPatient({
           "Content-Type": "application/json",
           cookie: cookiesStore.toString(),
         },
-      }
+      },
     );
-    if (res.status === 200 || res.status === 201) return { success: true };
-    else return { success: false };
+    if (res.status === 200 || res.status === 201) {
+      return { success: true };
+    } else return { success: false };
   } catch (error) {
     console.error(error);
     return { success: false };
@@ -88,6 +90,7 @@ export async function addSensorToHospital({
 }: {
   payload: { macAddress: string };
 }) {
+  const cookiesStore = await cookies();
   try {
     const res = await axios.post(
       "http://localhost:8000/hospital/create-sensor",
@@ -99,7 +102,7 @@ export async function addSensorToHospital({
           "Content-Type": "application/json",
           cookie: cookiesStore.toString(),
         },
-      }
+      },
     );
     if (res.status === 200 || res.status === 201) return { success: true };
     else return { success: false };
@@ -114,6 +117,7 @@ export async function assignSensorToPatient({
 }: {
   payload: { macAddress: string };
 }) {
+  const cookiesStore = await cookies();
   try {
     const res = await axios.post(
       "http://localhost:8000/hospital/assign-sensor",
@@ -125,7 +129,7 @@ export async function assignSensorToPatient({
           "Content-Type": "application/json",
           cookie: cookiesStore.toString(),
         },
-      }
+      },
     );
     if (res.status === 200 || res.status === 201) return { success: true };
     else return { success: false };

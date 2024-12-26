@@ -2,6 +2,7 @@
 import { useQuery, gql } from "@apollo/client";
 import { useUserStore } from "@/store/user";
 import { PatientTable } from "@/components/tables/PatientTable";
+import { PatientTableLoader } from "@/components/loaders/TableLoader";
 
 const GET_PATIENTS_BY_HOSPITAL = gql`
   query Patientsbyhospital($patientsbyhospitalId: ID!) {
@@ -12,6 +13,12 @@ const GET_PATIENTS_BY_HOSPITAL = gql`
       gender
       aadhaar
       admitted
+      doctors {
+        id
+        user {
+          name
+        }
+      }
     }
   }
 `;
@@ -23,11 +30,8 @@ const HospitalPatientPage = () => {
   });
   if (loading) {
     return (
-      <div className="h-full flex flex-col justify-center items-center pt-16 gap-8">
-        <h1 className="text-6xl font-bold">Please wait!</h1>
-        <h2 className="text-3xl text-muted-foreground">
-          While we are fetching data
-        </h2>
+      <div className="h-full flex flex-col justify-start items-center pt-16">
+        <PatientTableLoader />
       </div>
     );
   }

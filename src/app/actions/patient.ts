@@ -41,7 +41,54 @@ export async function registerPatient(state: FormState, formData: FormData) {
       },
     },
   );
-  console.log(res.data);
+  // console.log(res.data);
+  return { success: res.data?.success };
 }
 
-export async function dischargePatient() {}
+export async function dischargePatient({
+  payload,
+}: {
+  payload: { patientID: string };
+}) {
+  const cookiesStore = await cookies();
+  try {
+    const res = await axios.post(
+      "http://localhost:8000/hospital/discharge-patient",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          cookie: cookiesStore.toString(),
+        },
+      },
+    );
+    return { success: res.data?.success };
+  } catch (error) {
+    console.error(error);
+    return { success: false };
+  }
+}
+
+export async function removePatient({
+  payload,
+}: {
+  payload: { patientID: string };
+}) {
+  const cookiesStore = await cookies();
+  try {
+    const res = await axios.post(
+      "http://localhost:8000/hospital/remove-patient",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          cookie: cookiesStore.toString(),
+        },
+      },
+    );
+    return { success: res.data?.success };
+  } catch (error) {
+    console.error(error);
+    return { success: false };
+  }
+}

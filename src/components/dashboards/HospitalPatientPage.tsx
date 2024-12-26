@@ -12,6 +12,11 @@ const GET_PATIENTS_BY_HOSPITAL = gql`
       gender
       aadhaar
       admitted
+      doctors {
+        user {
+          name
+        }
+      }
     }
   }
 `;
@@ -33,10 +38,11 @@ const HospitalPatientPage = () => {
   }
   if (error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center pt-16 gap-8">
-        <h1 className="text-6xl font-bold">Oops!</h1>
-        <h2 className="text-3xl text-muted-foreground">
-          Error in fetching data
+      <div className="h-full flex flex-col justify-center items-center pt-16">
+        <h1 className="text-9xl font-bold font-number">Oops!!</h1>
+        <h1 className="text-7xl font-bold font-display">An Error Occurred!</h1>
+        <h2 className="text-3xl text-muted-foreground mt-20">
+          {error.message}
         </h2>
       </div>
     );

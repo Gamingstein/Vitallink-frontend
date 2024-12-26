@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -167,7 +168,11 @@ export function AddPatientDialog() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Assign</Button>
+            <DialogClose asChild>
+              <Button variant="ghost" type="submit">
+                Assign
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

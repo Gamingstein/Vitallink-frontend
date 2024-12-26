@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -23,15 +24,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { gql, useQuery } from "@apollo/client";
 import { useUserStore } from "@/store/user";
+import { assignDoctorToPatient } from "@/app/actions/hospital";
 
 type Doctor = {
   id: string;
+  specification: string;
   user: {
     name: string;
   };
@@ -41,6 +44,7 @@ const GET_DOCTORS = gql`
   query Doctorsbyhospital($doctorsbyhospitalId: ID!) {
     doctorsbyhospital(id: $doctorsbyhospitalId) {
       id
+      specification
       user {
         name
       }
@@ -48,11 +52,11 @@ const GET_DOCTORS = gql`
   }
 `;
 
-export function AssignDoctorDialog() {
+export function AssignDoctorDialog({ patientId }: { patientId: string }) {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_DOCTORS, {
     variables: {
-      doctorsbyhospitalId: user.hospital?.id || "671a1c7cb1efa6c38af82b1f",
+      doctorsbyhospitalId: user.hospital?.id,
     },
   });
   const doctors = data?.doctorsbyhospital;
@@ -60,13 +64,28 @@ export function AssignDoctorDialog() {
   const [value, setValue] = useState("");
   const { toast } = useToast();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    //backend call to assign doctor
+    const payload = {
+      doctorID: value,
+      patientID: patientId,
+    };
+    const res = await assignDoctorToPatient({ payload });
+    if (!res.success) {
+      toast({
+        title: "Failed to assign doctor!",
+        description: `Failed to assign Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} to the patient with ID:${patientId}`,
+        variant: "destructive",
+      });
+      return;
+    }
     toast({
       title: "Doctor assigned successfully!",
-      description: `Number ${value} doctor is assigned to the patient.`,
+      description: `Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} is assigned to the patient with ID:${patientId}`,
     });
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   }
 
   if (loading) {
@@ -81,7 +100,10 @@ export function AssignDoctorDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Assign Doctor</Button>
+        <Button variant="secondary">
+          <span className="sr-only">Allocate</span>
+          <Plus className="h-4 w-4" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -123,7 +145,7 @@ export function AssignDoctorDialog() {
                             value={doctor.id}
                             onSelect={(currentValue) => {
                               setValue(
-                                currentValue === value ? "" : currentValue
+                                currentValue === value ? "" : currentValue,
                               );
                               setOpen(false);
                             }}
@@ -133,10 +155,13 @@ export function AssignDoctorDialog() {
                                 "mr-2 h-4 w-4",
                                 value === doctor.id
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {doctor.user.name}
+                            <br />➜
+                            {doctor.specification.charAt(0).toUpperCase() +
+                              doctor.specification.slice(1).toLowerCase()}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -147,7 +172,11 @@ export function AssignDoctorDialog() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Assign</Button>
+            <DialogClose asChild>
+              <Button variant="ghost" type="submit">
+                Assign
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

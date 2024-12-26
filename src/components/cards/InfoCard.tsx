@@ -54,7 +54,11 @@ export default function InfoCard({ id }: { id: string }) {
             <p>Gender: {data.patient.gender}</p>
           </CardContent>
           <CardFooter>
-            <p>{data.patient.doctors[0].specification}</p>
+            <p>
+              {data.patient.doctors.length === 0
+                ? "No Doctor Assigned."
+                : data.patient.doctors[0]?.specification}
+            </p>
           </CardFooter>
         </Card>
       )}

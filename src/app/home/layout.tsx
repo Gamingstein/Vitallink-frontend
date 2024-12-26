@@ -14,7 +14,7 @@ export default function HomeLayout({
     username: "",
   };
   return (
-    <section className="h-dvh">
+    <section className={`h-dvh`}>
       <Navbar user={user} />
       {children}
       <Footer />

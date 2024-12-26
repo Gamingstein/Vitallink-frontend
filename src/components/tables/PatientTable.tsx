@@ -37,6 +37,22 @@ import {
 import { AddPatientDialog } from "../dialogs/AddPatientDialog";
 import { useUserStore } from "@/store/user";
 import { RegisterPatientDialog } from "../dialogs/RegisterPatientDialog";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
+import { dischargePatient, removePatient } from "@/app/actions/patient";
+import { AssignDoctorDialog } from "../dialogs/AssignDoctorDialog";
+
+type Doctor = {
+  id: string;
+  gender: "MALE" | "FEMALE" | "OTHER";
+  specification: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    username: string;
+  };
+};
 
 export type Patient = {
   id: string;
@@ -45,6 +61,7 @@ export type Patient = {
   gender: "MALE" | "FEMALE" | "OTHER";
   aadhaar: string;
   admitted: boolean;
+  doctors: Doctor[];
 };
 
 export const columns: ColumnDef<Patient>[] = [
@@ -89,7 +106,10 @@ export const columns: ColumnDef<Patient>[] = [
     accessorKey: "gender",
     header: "Gender",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("gender")}</div>
+      <div className="capitalize">
+        {(row.getValue("gender") as string).charAt(0).toUpperCase() +
+          (row.getValue("gender") as string).slice(1).toLowerCase()}
+      </div>
     ),
   },
   {
@@ -112,6 +132,23 @@ export const columns: ColumnDef<Patient>[] = [
         {row.getValue("admitted") ? "Yes" : "No"}
       </div>
     ),
+  },
+  {
+    id: "assignedDoctor",
+    header: "Assigned Doctor",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const patient = row.original;
+      return (
+        <div className="capitalize">
+          {patient.doctors.length == 0 ? (
+            <AssignDoctorDialog patientId={patient.id} />
+          ) : (
+            <span>Dr. {patient.doctors[0]?.user.name}</span>
+          )}
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -137,10 +174,47 @@ export const columns: ColumnDef<Patient>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                console.log("View patient report");
+                redirect(`/dashboard/patient/${patient.id}`);
               }}
             >
               View patient report
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={async () => {
+                const payload = { patientID: patient.id };
+                const res = await dischargePatient({ payload });
+                if (res.success) {
+                  toast.success("Patient removed successfully", {
+                    description: `${patient.name} has been removed from the hospital`,
+                  });
+                } else {
+                  toast.error("Failed to remove doctor");
+                }
+                setTimeout(() => {
+                  window.location.reload();
+                }, 2000);
+              }}
+            >
+              Discharge patient
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                const payload = { patientID: patient.id };
+                const res = await removePatient({ payload });
+                if (res.success) {
+                  toast.success("Patient removed successfully", {
+                    description: `${patient.name} has been removed from the hospital`,
+                  });
+                } else {
+                  toast.error("Failed to remove doctor");
+                }
+                setTimeout(() => {
+                  window.location.reload();
+                }, 2000);
+              }}
+            >
+              Remove patient
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

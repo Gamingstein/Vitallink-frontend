@@ -1,7 +1,9 @@
 "use client";
+import { addSensorToHospital } from "@/app/actions/hospital";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -12,24 +14,39 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 
 export function AddSensorDialog() {
   const { toast } = useToast();
   const [value, setValue] = useState("");
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    //backend call to add sensor
-    toast({
-      title: "Sensor added successfully!",
-      description: `Sensor with MAC address:${value} is added to the network.`,
-    });
+    const payload = { macAddress: value };
+    const res = await addSensorToHospital({ payload });
+    if (res.success) {
+      toast({
+        title: "Sensor added successfully!",
+        description: `Sensor with MAC address:${value} is added to the network.`,
+      });
+    } else {
+      toast({
+        title: "Failed to add sensor!",
+        description: `Sensor with MAC address:${value} could not be added to the network.`,
+        variant: "destructive",
+      });
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   }
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Sensor</Button>
+        <Button variant="outline">
+          <Plus className="h-4 w-4" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -54,7 +71,11 @@ export function AddSensorDialog() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Add</Button>
+            <DialogClose asChild>
+              <Button variant="ghost" type="submit">
+                Add
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>
