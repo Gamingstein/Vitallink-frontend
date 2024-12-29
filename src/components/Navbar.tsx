@@ -12,7 +12,7 @@ const Navbar = ({ user }: { user: UserType }) => {
   const removeUser = useUserStore((state) => state?.removeUser);
   const isUserLoggedIn = user.name === "" ? false : true;
   return (
-    <nav className="fixed top-0 left-0 w-full z-10 bg-muted dark:bg-primary-foreground backdrop-opacity-10 backdrop-blur-xl px-64 flex justify-between border-b-white">
+    <nav className="fixed top-0 left-0 w-full z-10 bg-background px-64 flex justify-between shadow-slate-950 shadow-xl">
       <Link href={"/home"}>
         <Image
           src={"/assets/logo.png"}

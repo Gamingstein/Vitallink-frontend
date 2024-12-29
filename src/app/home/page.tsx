@@ -9,10 +9,12 @@ export default function Home() {
           <h2 className="text-foreground text-center text-7xl font-extrabold font-display">
             Your Health, Your Link
           </h2>
-          <div className="text-center font-sans">
+          <div>
             <TextGenerateEffect
               words={`At VitalLink, we provide innovative solutions to enhance healthcare delivery, streamline communication between healthcare providers and patients, and ensure effective management of health data for better outcomes. Join us on a journey towards a healthier future!`}
-              duration={0.5}
+              duration={1.5}
+              filter={false}
+              className="text-foreground text-center text-4xl font-semibold font-sans"
             />
           </div>
         </div>
