@@ -25,7 +25,7 @@ const GET_HOSPITAL = gql`
 const HospitalDashboardPage = () => {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_HOSPITAL, {
-    variables: { hospitalId: user.hospital?.id },
+    variables: { hospitalId: user?.hospital?.id },
   });
   if (loading) {
     return (

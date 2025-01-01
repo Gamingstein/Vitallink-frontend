@@ -6,16 +6,9 @@ export default function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = {
-    name: "",
-    email: "",
-    avatar: "",
-    isAdmin: false,
-    username: "",
-  };
   return (
     <section className={`h-dvh`}>
-      <Navbar user={user} />
+      <Navbar />
       {children}
       <Footer />
     </section>

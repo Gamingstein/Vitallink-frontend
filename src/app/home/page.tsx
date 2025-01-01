@@ -1,7 +1,14 @@
+"use client";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { useUserStore } from "@/store/user";
+import { useEffect } from "react";
 
 export default function Home() {
+  const getUser = useUserStore((state) => state.getUser);
+  useEffect(() => {
+    getUser();
+  });
   return (
     <BackgroundLines>
       <div className="h-full w-full flex flex-col justify-center items-center">

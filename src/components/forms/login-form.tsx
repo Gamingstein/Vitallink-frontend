@@ -14,9 +14,9 @@ export default function LoginForm() {
       <h2 className="font-bold text-2xl text-neutral-800 dark:text-neutral-200">
         Welcome again to VitalLink
       </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
+      {/* <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
         Create an account if you don&apos;t have one already
-      </p>
+      </p> */}
 
       <form className="my-8" action={action}>
         <LabelInputContainer className="mb-4">
@@ -37,19 +37,12 @@ export default function LoginForm() {
             type="password"
             name="password"
           />
-          {state?.errors?.password && <p>Password is incorrect</p>}
+          {state?.errors?.password && <p>Invalid Email or Password</p>}
         </LabelInputContainer>
 
         <Submit />
       </form>
-      {/* <div className="text-center mt-4">
-        <a
-          href="#"
-          className="text-neutral-600 dark:text-neutral-300 hover:underline"
-        >
-          Forgot password?
-        </a>
-      </div> */}
+
       <div className="text-center text-neutral-600 dark:text-neutral-300">
         Don&apos;t have an account?{" "}
         <Link

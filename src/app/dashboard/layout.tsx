@@ -2,8 +2,7 @@
 import Navbar from "@/components/Navbar";
 import { useUserStore } from "@/store/user";
 import { LoaderCircle } from "lucide-react";
-import Image from "next/image";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HomeLayout({
   children,
@@ -11,12 +10,15 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   const { user, getUser } = useUserStore();
-  const [loading, setLoading] = useState(true);
-  useLayoutEffect(() => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
     setLoading(true);
     getUser();
-    setLoading(false);
-  }, [loading, getUser]);
+    if (user) {
+      setLoading(false);
+    }
+  }, [user, getUser]);
 
   if (loading) {
     return (
@@ -25,10 +27,9 @@ export default function HomeLayout({
       </section>
     );
   }
-
   return (
     <section className="h-dvh">
-      <Navbar user={user} />
+      <Navbar />
       {children}
     </section>
   );

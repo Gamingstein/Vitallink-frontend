@@ -1,5 +1,5 @@
 "use server";
-import { permanentRedirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import {
   SignupFormSchema,
   FormState,
@@ -9,17 +9,10 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 export async function signup(state: FormState, formData: FormData) {
-  let redirectPath;
   // Validate form fields
-  const validatedFields = SignupFormSchema.safeParse({
-    firstname: formData.get("firstname"),
-    lastname: formData.get("lastname"),
-    username: formData.get("username"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-    isAdmin: formData.get("isAdmin"),
-  });
-
+  const validatedFields = SignupFormSchema.safeParse(
+    Object.fromEntries(formData),
+  );
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
@@ -35,30 +28,21 @@ export async function signup(state: FormState, formData: FormData) {
   }
   payload.append("name", `${data.firstname} ${data.lastname}`);
   payload.append("avatar", formData.get("avatar") as Blob);
-  console.log("Validated fields", payload);
+
   const res = await axios.post("http://localhost:8000/user/register", payload, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-  if (res.status === 201) {
-    redirectPath = "/auth/login";
-  } else {
-    redirectPath = "/auth/signup";
-    console.log(res.data);
-  }
-  permanentRedirect(redirectPath);
+  redirect(res.status === 201 ? "/auth/login" : "/auth/signup");
 }
 
 export async function login(state: FormState, formData: FormData) {
   // Validate form fields
-  let redirectPath;
-  const validatedFields = LoginFormSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-
+  const validatedFields = LoginFormSchema.safeParse(
+    Object.fromEntries(formData),
+  );
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
@@ -68,7 +52,7 @@ export async function login(state: FormState, formData: FormData) {
 
   const res = await axios.post(
     "http://localhost:8000/user/login",
-    validatedFields.data
+    validatedFields.data,
   );
 
   if (res.status === 200) {
@@ -87,12 +71,8 @@ export async function login(state: FormState, formData: FormData) {
       expires: refreshExpiresAt,
       sameSite: "none",
     });
-    redirectPath = "/dashboard";
-  } else {
-    redirectPath = "/auth/login";
-    console.log(res.data);
   }
-  permanentRedirect(redirectPath);
+  redirect("/dashboard");
 }
 
 export async function logout() {
@@ -104,14 +84,13 @@ export async function logout() {
       headers: {
         cookie: cookiesStore.toString(),
       },
-    }
+    },
   );
   if (res.status === 200) {
     cookiesStore.delete("accessToken");
     cookiesStore.delete("refreshToken");
-  } else {
-    console.log(res.data);
   }
+  redirect("/home");
 }
 
 export async function getCurrentUser() {

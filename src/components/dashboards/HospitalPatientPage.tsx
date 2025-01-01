@@ -24,7 +24,7 @@ const GET_PATIENTS_BY_HOSPITAL = gql`
 const HospitalPatientPage = () => {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_PATIENTS_BY_HOSPITAL, {
-    variables: { patientsbyhospitalId: user.hospital?.id },
+    variables: { patientsbyhospitalId: user?.hospital?.id },
   });
   if (loading) {
     return (
