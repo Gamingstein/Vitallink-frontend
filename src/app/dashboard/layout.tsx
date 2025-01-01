@@ -2,7 +2,7 @@
 import Navbar from "@/components/Navbar";
 import { useUserStore } from "@/store/user";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 export default function HomeLayout({
   children,
@@ -12,7 +12,7 @@ export default function HomeLayout({
   const { user, getUser } = useUserStore();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setLoading(true);
     getUser();
     if (user) {
