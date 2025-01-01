@@ -8,9 +8,7 @@ export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isPublicPath = PublicRoutes.includes(path);
   const isTokenPresent = request.cookies.has("accessToken");
-  // console.log(
-  //   `TokenPresent\t${isTokenPresent}\nPublicPath\t${isPublicPath}\nToken\t\t${request.cookies.get("accessToken")?.value.split(".")[0]}`,
-  // );
+
   if (isPublicPath && isTokenPresent) {
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
