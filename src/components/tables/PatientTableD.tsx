@@ -35,8 +35,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AddPatientDialog } from "../dialogs/AddPatientDialog";
-import { useUserStore } from "@/store/user";
-import { RegisterPatientDialog } from "../dialogs/RegisterPatientDialog";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { removePatientFromDoctor } from "@/app/actions/doctor";
@@ -175,8 +173,6 @@ export const columns: ColumnDef<Patient>[] = [
 ];
 
 export function PatientTableD({ data }: { data: Patient[] }) {
-  const user = useUserStore((state) => state.user);
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -223,7 +219,7 @@ export function PatientTableD({ data }: { data: Patient[] }) {
           }
           className="max-w-sm"
         />
-        {user.isAdmin ? <RegisterPatientDialog /> : <AddPatientDialog />}
+        <AddPatientDialog />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
