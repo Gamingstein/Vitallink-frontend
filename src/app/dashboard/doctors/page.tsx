@@ -23,7 +23,7 @@ const GET_DOCTORS_BY_HOSPITAL = gql`
 const HospitalPatientPage = () => {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_DOCTORS_BY_HOSPITAL, {
-    variables: { doctorsbyhospitalId: user.hospital?.id },
+    variables: { doctorsbyhospitalId: user?.hospital?.id },
   });
   if (loading) {
     return (

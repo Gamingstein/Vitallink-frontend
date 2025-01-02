@@ -1,8 +1,8 @@
 import { SignupForm } from "@/components/forms/signup-form";
 
 export const metadata = {
-  title: "Sign Up Page",
-  description: "Sign Up Page",
+  title: "Sign Up",
+  description: "Sign up for a new account",
 };
 
 export default function SignUpPage() {

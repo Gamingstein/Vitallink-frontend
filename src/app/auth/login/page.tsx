@@ -1,8 +1,8 @@
 import LoginForm from "@/components/forms/login-form";
 
 export const metadata = {
-  title: "Login Page",
-  description: "Login Page",
+  title: "Login",
+  description: "Login to your account",
 };
 
 export default function LogInPage() {
