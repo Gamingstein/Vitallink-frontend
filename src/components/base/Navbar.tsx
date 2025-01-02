@@ -3,7 +3,7 @@ import { useUserStore } from "@/store/user";
 import { IconLogout } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect } from "react";
 
 const Navbar = () => {

@@ -1,5 +1,5 @@
 "use client";
-import HeroSvg from "@/components/HeroSvg";
+import HeroSvg from "@/components/base/HeroSvg";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import { useUserStore } from "@/store/user";
 import { useEffect } from "react";
