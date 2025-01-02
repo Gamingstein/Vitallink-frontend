@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/base/Navbar";
 import { useUserStore } from "@/store/user";
 import { LoaderCircle } from "lucide-react";
 import { useLayoutEffect, useState } from "react";
