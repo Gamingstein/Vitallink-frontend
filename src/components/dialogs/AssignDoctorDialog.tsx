@@ -56,7 +56,7 @@ export function AssignDoctorDialog({ patientId }: { patientId: string }) {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_DOCTORS, {
     variables: {
-      doctorsbyhospitalId: user.hospital?.id,
+      doctorsbyhospitalId: user?.hospital?.id,
     },
   });
   const doctors = data?.doctorsbyhospital;
@@ -89,7 +89,6 @@ export function AssignDoctorDialog({ patientId }: { patientId: string }) {
   }
 
   if (loading) {
-    console.log(user.hospital?.id);
     return <p>Loading...</p>;
   }
   if (error) {

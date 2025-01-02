@@ -45,7 +45,7 @@ export function RegisterPatientDialog() {
 
   const { data, loading, error } = useQuery(GET_HOSPITAL_SENSORS, {
     variables: {
-      sensorsbyhospitalId: user.hospital?.id || "671a1c7cb1efa6c38af82b1f",
+      sensorsbyhospitalId: user?.hospital?.id,
     },
   });
   const sensors = data?.sensorsbyhospital.filter(

@@ -53,7 +53,7 @@ export function AddPatientDialog() {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_HOSPITALS, {
     variables: {
-      hospitalsbydoctorId: user.doctor?.id || "671a1d41b1efa6c38af82b23",
+      hospitalsbydoctorId: user?.doctor?.id,
     },
   });
   const hospitals = data?.hospitalsbydoctor;
