@@ -7,7 +7,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section className={`h-dvh`}>
+    <section className={`min-h-dvh`}>
       <Navbar />
       {children}
       <Footer />

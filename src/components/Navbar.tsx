@@ -13,8 +13,8 @@ const Navbar = () => {
   useEffect(() => {}, [user]);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-transparent px-64 flex justify-between z-10 before:block before:absolute before:-inset-1 before:bg-background before:-z-10 before:opacity-5 backdrop-blur-sm">
-      <Link href={"/home"}>
+    <nav className="fixed top-0 left-0 w-full bg-transparent px-64 flex justify-between z-10 before:block before:absolute before:inset-0 before:bg-background before:-z-10 before:opacity-75 backdrop-blur-2xl">
+      <Link href={"/home#"}>
         <Image
           src={"/assets/logo.png"}
           width={400}

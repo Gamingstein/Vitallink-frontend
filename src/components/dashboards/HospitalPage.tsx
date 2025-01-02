@@ -5,6 +5,7 @@ import { useUserStore } from "@/store/user";
 import { useQuery, gql } from "@apollo/client";
 import SensorCard from "../cards/SensorCard";
 import { Skeleton } from "../ui/skeleton";
+import DashboardCard from "../cards/DashboardCard";
 
 const GET_HOSPITAL = gql`
   query Hospital($hospitalId: ID!) {
@@ -49,10 +50,15 @@ const HospitalDashboardPage = () => {
   }
 
   return (
-    <div className="h-full flex justify-center items-center pt-16 gap-8">
-      <PatientCard count={data.hospital.patients.length} />
-      <DoctorCard count={data.hospital.doctors.length} />
-      <SensorCard count={data.hospital.sensors.length} />
+    <div className="h-full flex flex-col justify-center items-center gap-16">
+      <div className="h-1/2 w-full flex flex-col justify-center items-center">
+        <DashboardCard />
+      </div>
+      <div className="flex justify-center items-center gap-8">
+        <PatientCard count={data.hospital.patients.length} />
+        <DoctorCard count={data.hospital.doctors.length} />
+        <SensorCard count={data.hospital.sensors.length} />
+      </div>
     </div>
   );
 };

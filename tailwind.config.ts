@@ -98,11 +98,22 @@ const config = {
             backgroundPosition: "350% 50%, 350% 50%",
           },
         },
+        "title-in": {
+          from: {
+            opacity: "0",
+            transform: "translateY(-20px)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         aurora: "aurora 60s linear infinite",
+        "title-in": "title-in 1.5s ease-out",
       },
     },
   },
