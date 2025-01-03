@@ -77,15 +77,11 @@ export async function login(state: FormState, formData: FormData) {
 
 export async function logout() {
   const cookiesStore = await cookies();
-  const res = await axios.post(
-    "http://localhost:8000/user/logout",
-    { moye: "moye" },
-    {
-      headers: {
-        cookie: cookiesStore.toString(),
-      },
+  const res = await axios.get("http://localhost:8000/user/logout", {
+    headers: {
+      cookie: cookiesStore.toString(),
     },
-  );
+  });
   if (res.status === 200) {
     cookiesStore.delete("accessToken");
     cookiesStore.delete("refreshToken");

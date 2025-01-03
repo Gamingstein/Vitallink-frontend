@@ -35,9 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-
-src/app/(base)/test
-src/app/(base)/doctor
-src/app/(base)/hospital
+src/app/(base)/
 
 .env*
