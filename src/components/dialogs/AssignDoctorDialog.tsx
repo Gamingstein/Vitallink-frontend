@@ -52,7 +52,13 @@ const GET_DOCTORS = gql`
   }
 `;
 
-export function AssignDoctorDialog({ patientId }: { patientId: string }) {
+export function AssignDoctorDialog({
+  patientId,
+  refetchParentAction,
+}: {
+  patientId: string;
+  refetchParentAction: () => void;
+}) {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_DOCTORS, {
     variables: {
@@ -84,8 +90,8 @@ export function AssignDoctorDialog({ patientId }: { patientId: string }) {
       description: `Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} is assigned to the patient with ID:${patientId}`,
     });
     setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+      refetchParentAction();
+    }, 500);
   }
 
   if (loading) {

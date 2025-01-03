@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -38,6 +37,7 @@ import { AddPatientDialog } from "../dialogs/AddPatientDialog";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { removePatientFromDoctor } from "@/app/actions/doctor";
+import { useState } from "react";
 
 export type Patient = {
   id: string;
@@ -48,139 +48,149 @@ export type Patient = {
   admitted: boolean;
 };
 
-export const columns: ColumnDef<Patient>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+export function getColumns(refetchParent: () => void): ColumnDef<Patient>[] {
+  return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "gender",
-    header: "Gender",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {(row.getValue("gender") as string).charAt(0).toUpperCase() +
-          (row.getValue("gender") as string).slice(1).toLowerCase()}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "age",
-    header: "Age",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("age")}</div>,
-  },
-  {
-    accessorKey: "aadhaar",
-    header: "Aadhaar",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("aadhaar")}</div>
-    ),
-  },
-  {
-    accessorKey: "admitted",
-    header: "Admitted",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {row.getValue("admitted") ? "Yes" : "No"}
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const patient = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(patient.id)}
-            >
-              Copy patient ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                redirect(`/dashboard/patient/${patient.id}`);
-              }}
-            >
-              View patient report
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={async () => {
-                const payload = { patientID: patient.id };
-                const res = await removePatientFromDoctor({ payload });
-                if (res.success) {
-                  toast.success("Patient removed successfully", {
-                    description: `${patient.name} has been removed`,
-                  });
-                } else {
-                  toast.error("Failed to remove patinet");
-                }
-                setTimeout(() => {
-                  window.location.reload();
-                }, 2000);
-              }}
-            >
-              Remove patient
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("name")}</div>
+      ),
     },
-  },
-];
+    {
+      accessorKey: "gender",
+      header: "Gender",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {(row.getValue("gender") as string).charAt(0).toUpperCase() +
+            (row.getValue("gender") as string).slice(1).toLowerCase()}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "age",
+      header: "Age",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("age")}</div>
+      ),
+    },
+    {
+      accessorKey: "aadhaar",
+      header: "Aadhaar",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("aadhaar")}</div>
+      ),
+    },
+    {
+      accessorKey: "admitted",
+      header: "Admitted",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {row.getValue("admitted") ? "Yes" : "No"}
+        </div>
+      ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const patient = row.original;
 
-export function PatientTableD({ data }: { data: Patient[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(patient.id)}
+              >
+                Copy patient ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  redirect(`/dashboard/patient/${patient.id}`);
+                }}
+              >
+                View patient report
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => {
+                  const payload = { patientID: patient.id };
+                  const res = await removePatientFromDoctor({ payload });
+                  if (res.success) {
+                    toast.success("Patient removed successfully", {
+                      description: `${patient.name} has been removed`,
+                    });
+                  } else {
+                    toast.error("Failed to remove patient");
+                  }
+                  setTimeout(() => {
+                    refetchParent();
+                  }, 500);
+                }}
+              >
+                Remove patient
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+}
 
+export function PatientTableD({
+  data,
+  refetchAction,
+}: {
+  data: Patient[];
+  refetchAction: () => void;
+}) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
+  const columns = getColumns(refetchAction);
   const table = useReactTable({
     data,
     columns,
@@ -219,7 +229,7 @@ export function PatientTableD({ data }: { data: Patient[] }) {
           }
           className="max-w-sm"
         />
-        <AddPatientDialog />
+        <AddPatientDialog refetchParentAction={refetchAction} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

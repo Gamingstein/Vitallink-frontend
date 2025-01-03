@@ -51,113 +51,123 @@ export type Doctor = {
   };
 };
 
-export const columns: ColumnDef<Doctor>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorFn: (doctor) => doctor.user.name,
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+export function getColumns(refetchParent: () => void): ColumnDef<Doctor>[] {
+  return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "gender",
-    header: "Gender",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {(row.getValue("gender") as string).charAt(0).toUpperCase() +
-          (row.getValue("gender") as string).slice(1).toLowerCase()}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "specification",
-    header: "Specification",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {(row.getValue("specification") as string).charAt(0).toUpperCase() +
-          (row.getValue("specification") as string).slice(1).toLowerCase()}
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const doctor = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(doctor.id)}
-            >
-              Copy doctor ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={async () => {
-                const payload = { doctorID: doctor.id };
-                const res = await removeDoctorFromHospital({ payload });
-                if (res.success) {
-                  toast.success("Doctor removed successfully", {
-                    description: `Dr.${doctor.user.name} has been removed from the hospital`,
-                  });
-                } else {
-                  toast.error("Failed to remove doctor");
-                }
-                setTimeout(() => {
-                  window.location.reload();
-                }, 2000);
-              }}
-            >
-              Remove doctor
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    {
+      accessorFn: (doctor) => doctor.user.name,
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("name")}</div>
+      ),
     },
-  },
-];
+    {
+      accessorKey: "gender",
+      header: "Gender",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {(row.getValue("gender") as string).charAt(0).toUpperCase() +
+            (row.getValue("gender") as string).slice(1).toLowerCase()}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "specification",
+      header: "Specification",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {(row.getValue("specification") as string).charAt(0).toUpperCase() +
+            (row.getValue("specification") as string).slice(1).toLowerCase()}
+        </div>
+      ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const doctor = row.original;
 
-export function DoctorTable({ data }: { data: Doctor[] }) {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(doctor.id)}
+              >
+                Copy doctor ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => {
+                  const payload = { doctorID: doctor.id };
+                  const res = await removeDoctorFromHospital({ payload });
+                  if (res.success) {
+                    toast.success("Doctor removed successfully", {
+                      description: `Dr.${doctor.user.name} has been removed from the hospital`,
+                    });
+                  } else {
+                    toast.error("Failed to remove doctor");
+                  }
+                  setTimeout(() => {
+                    refetchParent();
+                  }, 500);
+                }}
+              >
+                Remove doctor
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+}
+
+export function DoctorTable({
+  data,
+  refetchAction,
+}: {
+  data: Doctor[];
+  refetchAction: () => void;
+}) {
   // const user = useUserStore((state) => state.user);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -167,6 +177,7 @@ export function DoctorTable({ data }: { data: Doctor[] }) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const columns = getColumns(refetchAction);
 
   const table = useReactTable({
     data,
@@ -198,7 +209,7 @@ export function DoctorTable({ data }: { data: Doctor[] }) {
           }
           className="max-w-sm"
         />
-        <AddDoctorDialog />
+        <AddDoctorDialog refetchParentAction={refetchAction} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

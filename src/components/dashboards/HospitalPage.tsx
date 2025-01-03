@@ -25,15 +25,20 @@ const GET_HOSPITAL = gql`
 
 const HospitalDashboardPage = () => {
   const user = useUserStore((state) => state.user);
-  const { data, loading, error } = useQuery(GET_HOSPITAL, {
+  const { data, loading, error, refetch } = useQuery(GET_HOSPITAL, {
     variables: { hospitalId: user?.hospital?.id },
   });
   if (loading) {
     return (
-      <div className="h-full flex justify-center items-center pt-16 gap-8">
-        <Skeleton className="w-96 h-64" />
-        <Skeleton className="w-96 h-64" />
-        <Skeleton className="w-96 h-64" />
+      <div className="h-full flex flex-col justify-center items-center gap-16">
+        <div className="h-1/2 w-full flex flex-col justify-center items-center">
+          <DashboardCard />
+        </div>
+        <div className="flex justify-center items-center gap-8">
+          <Skeleton className="w-96 h-64" />
+          <Skeleton className="w-96 h-64" />
+          <Skeleton className="w-96 h-64" />
+        </div>
       </div>
     );
   }
@@ -57,7 +62,10 @@ const HospitalDashboardPage = () => {
       <div className="flex justify-center items-center gap-8">
         <PatientCard count={data.hospital.patients.length} />
         <DoctorCard count={data.hospital.doctors.length} />
-        <SensorCard count={data.hospital.sensors.length} />
+        <SensorCard
+          count={data.hospital.sensors.length}
+          refetchAction={refetch}
+        />
       </div>
     </div>
   );

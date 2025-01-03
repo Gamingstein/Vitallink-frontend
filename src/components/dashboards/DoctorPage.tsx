@@ -19,9 +19,10 @@ const GET_PATIENTS_BY_DOCTOR = gql`
 
 const DoctorDashboardPage = () => {
   const user = useUserStore((state) => state.user);
-  const { data, loading, error } = useQuery(GET_PATIENTS_BY_DOCTOR, {
+  const { data, loading, error, refetch } = useQuery(GET_PATIENTS_BY_DOCTOR, {
     variables: { patientsbydoctorId: user?.doctor?.id },
   });
+
   if (loading) {
     return (
       <div className="h-full flex justify-center items-start pt-16">
@@ -42,7 +43,7 @@ const DoctorDashboardPage = () => {
   }
   return (
     <div className="h-full flex justify-center items-start pt-16">
-      <PatientTableD data={data.patientsbydoctor} />
+      <PatientTableD data={data.patientsbydoctor} refetchAction={refetch} />
     </div>
   );
 };

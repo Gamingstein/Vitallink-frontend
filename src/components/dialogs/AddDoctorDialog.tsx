@@ -52,7 +52,11 @@ const GET_DOCTORS = gql`
   }
 `;
 
-export function AddDoctorDialog() {
+export function AddDoctorDialog({
+  refetchParentAction,
+}: {
+  refetchParentAction: () => void;
+}) {
   const { data, loading, error } = useQuery(GET_DOCTORS);
   const doctors = data?.doctors as Doctor[];
   const [open, setOpen] = useState(false);
@@ -77,8 +81,8 @@ export function AddDoctorDialog() {
       });
     }
     setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+      refetchParentAction();
+    }, 500);
   }
 
   if (loading) {

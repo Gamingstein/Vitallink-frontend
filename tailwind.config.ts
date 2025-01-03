@@ -27,6 +27,7 @@ const config = {
         number: ["var(--font-bevan)"],
       },
       colors: {
+        fscolor: "#e78c43",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

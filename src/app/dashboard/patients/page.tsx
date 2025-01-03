@@ -25,7 +25,7 @@ const GET_PATIENTS_BY_HOSPITAL = gql`
 
 const HospitalPatientPage = () => {
   const user = useUserStore((state) => state.user);
-  const { data, loading, error } = useQuery(GET_PATIENTS_BY_HOSPITAL, {
+  const { data, loading, error, refetch } = useQuery(GET_PATIENTS_BY_HOSPITAL, {
     variables: { patientsbyhospitalId: user?.hospital?.id },
   });
   if (loading) {
@@ -49,7 +49,7 @@ const HospitalPatientPage = () => {
   }
   return (
     <div className="h-full flex flex-col justify-start items-center pt-16">
-      <PatientTable data={data.patientsbyhospital} />
+      <PatientTable data={data.patientsbyhospital} refetchAction={refetch} />
     </div>
   );
 };

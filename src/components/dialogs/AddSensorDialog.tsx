@@ -17,7 +17,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-export function AddSensorDialog() {
+export function AddSensorDialog({
+  refetchParentAction,
+}: {
+  refetchParentAction: () => void;
+}) {
   const { toast } = useToast();
   const [value, setValue] = useState("");
 
@@ -38,8 +42,8 @@ export function AddSensorDialog() {
       });
     }
     setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+      refetchParentAction();
+    }, 500);
   }
   return (
     <Dialog>

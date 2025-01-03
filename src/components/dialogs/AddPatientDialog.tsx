@@ -49,7 +49,11 @@ const GET_HOSPITALS = gql`
   }
 `;
 
-export function AddPatientDialog() {
+export function AddPatientDialog({
+  refetchParentAction,
+}: {
+  refetchParentAction: () => void;
+}) {
   const user = useUserStore((state) => state.user);
   const { data, loading, error } = useQuery(GET_HOSPITALS, {
     variables: {
@@ -67,7 +71,7 @@ export function AddPatientDialog() {
     const payload = { aadhaar: patient, hospitalID: value };
     const res = await addPatientToDoctor({ payload });
     if (!res.success) {
-      return toast({
+      toast({
         title: "Failed to add patient!",
         description: "An error occurred while adding the patient.",
         variant: "destructive",
@@ -81,6 +85,9 @@ export function AddPatientDialog() {
         }" has been added to your care.`,
       });
     }
+    setTimeout(() => {
+      refetchParentAction();
+    }, 500);
   }
 
   if (loading) return <p>Loading...</p>;
