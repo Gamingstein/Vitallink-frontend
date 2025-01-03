@@ -32,7 +32,7 @@ export async function registerPatient(state: FormState, formData: FormData) {
   }
   const data = validatedFields.data;
   const res = await axios.post(
-    "http://localhost:8000/hospital/create-patient",
+    "https://vitallinkql.onrender.com/hospital/create-patient",
     data,
     {
       headers: {
@@ -53,7 +53,7 @@ export async function dischargePatient({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/hospital/discharge-patient",
+      "https://vitallinkql.onrender.com/hospital/discharge-patient",
       payload,
       {
         headers: {
@@ -77,7 +77,7 @@ export async function removePatient({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/hospital/remove-patient",
+      "https://vitallinkql.onrender.com/hospital/remove-patient",
       payload,
       {
         headers: {

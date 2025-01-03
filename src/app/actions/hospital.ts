@@ -10,7 +10,7 @@ export async function addDoctorToHospital({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/hospital/add-doc",
+      "https://vitallinkql.onrender.com/hospital/add-doc",
       {
         doctorID: payload.doctorID,
       },
@@ -37,7 +37,7 @@ export async function removeDoctorFromHospital({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/hospital/remove-doc",
+      "https://vitallinkql.onrender.com/hospital/remove-doc",
       {
         doctorID: payload.doctorID,
       },
@@ -64,7 +64,7 @@ export async function assignDoctorToPatient({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/hospital/assign-doc",
+      "https://vitallinkql.onrender.com/hospital/assign-doc",
       {
         doctorID: payload.doctorID,
         patientID: payload.patientID,
@@ -93,7 +93,7 @@ export async function addSensorToHospital({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/hospital/create-sensor",
+      "https://vitallinkql.onrender.com/hospital/create-sensor",
       {
         macAddress: payload.macAddress,
       },
@@ -120,7 +120,7 @@ export async function assignSensorToPatient({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/hospital/assign-sensor",
+      "https://vitallinkql.onrender.com/hospital/assign-sensor",
       {
         macAddress: payload.macAddress,
       },

@@ -29,11 +29,15 @@ export async function signup(state: FormState, formData: FormData) {
   payload.append("name", `${data.firstname} ${data.lastname}`);
   payload.append("avatar", formData.get("avatar") as Blob);
 
-  const res = await axios.post("http://localhost:8000/user/register", payload, {
-    headers: {
-      "Content-Type": "multipart/form-data",
+  const res = await axios.post(
+    "https://vitallinkql.onrender.com/user/register",
+    payload,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
-  });
+  );
 
   redirect(res.status === 201 ? "/auth/login" : "/auth/signup");
 }
@@ -51,7 +55,7 @@ export async function login(state: FormState, formData: FormData) {
   }
 
   const res = await axios.post(
-    "http://localhost:8000/user/login",
+    "https://vitallinkql.onrender.com/user/login",
     validatedFields.data,
   );
 
@@ -77,7 +81,7 @@ export async function login(state: FormState, formData: FormData) {
 
 export async function logout() {
   const cookiesStore = await cookies();
-  const res = await axios.get("http://localhost:8000/user/logout", {
+  const res = await axios.get("https://vitallinkql.onrender.com/user/logout", {
     headers: {
       cookie: cookiesStore.toString(),
     },
@@ -95,7 +99,7 @@ export async function getCurrentUser() {
     return { user: null, error: "No access token found" };
   }
   try {
-    const res = await axios.get("http://localhost:8000/user/me", {
+    const res = await axios.get("https://vitallinkql.onrender.com/user/me", {
       headers: {
         cookie: cookiesStore.toString(),
       },

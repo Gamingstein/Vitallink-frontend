@@ -10,7 +10,7 @@ export async function addPatientToDoctor({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/doctor/add-patient",
+      "https://vitallinkql.onrender.com/doctor/add-patient",
       {
         aadhaar: payload.aadhaar,
         hospitalID: payload.hospitalID,
@@ -20,7 +20,7 @@ export async function addPatientToDoctor({
           "Content-Type": "application/json",
           cookie: cookiesStore.toString(),
         },
-      }
+      },
     );
     if (res.status === 200 || res.status === 201) return { success: true };
     else return { success: false };
@@ -38,7 +38,7 @@ export async function removePatientFromDoctor({
   const cookiesStore = await cookies();
   try {
     const res = await axios.post(
-      "http://localhost:8000/doctor/remove-patient",
+      "https://vitallinkql.onrender.com/doctor/remove-patient",
       {
         patientID: payload.patientID,
       },
@@ -47,7 +47,7 @@ export async function removePatientFromDoctor({
           "Content-Type": "application/json",
           cookie: cookiesStore.toString(),
         },
-      }
+      },
     );
     if (res.status === 200 || res.status === 201) return { success: true };
     else return { success: false };

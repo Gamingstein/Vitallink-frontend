@@ -8,7 +8,7 @@ import {
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: "http://localhost:8000/graphql",
+    uri: "https://vitallinkql.onrender.com/graphql",
     fetchOptions: { cache: "no-store" },
   });
 
