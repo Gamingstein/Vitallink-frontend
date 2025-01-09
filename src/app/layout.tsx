@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins, Caveat, Bevan } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import { Toaster } from "@/components/ui/toaster";
 import { ApolloWrapper } from "@/components/wrappers/ApolloWrapper";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
@@ -41,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={"dark"}>
       <body
-        className={`${poppins.className} ${poppins.variable} ${author.variable} ${caveat.variable} ${bevan.variable} antialiased`}
+        className={`${GeistSans.className} ${poppins.variable} ${author.variable} ${caveat.variable} ${bevan.variable} antialiased scroll-smooth`}
       >
         <SonnerToaster />
         <main>
