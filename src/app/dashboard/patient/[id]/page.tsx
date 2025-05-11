@@ -7,7 +7,7 @@ export default async function PatientPage({
 }) {
   const { id } = await params;
   return (
-    <div className="mt-16 h-full flex justify-center items-center">
+    <div className="pt-32 h-full flex justify-center items-start">
       <InfoCard id={id} />
     </div>
   );

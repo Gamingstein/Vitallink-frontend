@@ -19,7 +19,7 @@ export default function SensorCard({
   return (
     <Card className="bg-muted w-96">
       <CardHeader>
-        <CardTitle>Sensors</CardTitle>
+        <CardTitle className="text-2xl">Sensors</CardTitle>
         <CardDescription>Number of sensors</CardDescription>
       </CardHeader>
       <CardContent>

@@ -16,7 +16,7 @@ export default function DoctorCard({ count }: { count: number }) {
   return (
     <Card className="bg-muted w-96">
       <CardHeader>
-        <CardTitle>Doctors</CardTitle>
+        <CardTitle className="text-2xl">Doctors</CardTitle>
         <CardDescription>Number of doctors</CardDescription>
       </CardHeader>
       <CardContent>
@@ -28,6 +28,7 @@ export default function DoctorCard({ count }: { count: number }) {
           onClick={() => {
             router.push("/dashboard/doctors");
           }}
+          className="cursor-pointer"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>

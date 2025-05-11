@@ -1,6 +1,6 @@
 "use client";
 import HeroSvg from "@/components/base/HeroSvg";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 const COLORS = [
   "#e81416",

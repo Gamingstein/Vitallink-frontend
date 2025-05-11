@@ -1,7 +1,7 @@
 "use client";
 import { useUserStore } from "@/store/user";
 import DCSvg from "../base/DCSvg";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export default function DashboardCard() {
   const user = useUserStore((state) => state.user);

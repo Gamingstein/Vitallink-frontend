@@ -27,7 +27,7 @@ export const useUserStore = create(
           return;
         }
         const user = await getCurrentUser();
-        if (user.user) {
+        if (user?.user) {
           set({ user: user.user });
         }
       },

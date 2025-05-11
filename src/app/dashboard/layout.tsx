@@ -28,7 +28,7 @@ export default function HomeLayout({
     );
   }
   return (
-    <section className="h-dvh">
+    <section className="h-dvh -mt-16">
       <Navbar />
       {children}
     </section>

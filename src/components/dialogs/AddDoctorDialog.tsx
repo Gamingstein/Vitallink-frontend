@@ -27,7 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { gql, useQuery } from "@apollo/client";
 import { addDoctorToHospital } from "@/app/actions/hospital";
 import { DialogLoader } from "../loaders/DialogLoader";
@@ -61,23 +61,18 @@ export function AddDoctorDialog({
   const doctors = data?.doctors as Doctor[];
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const { toast } = useToast();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const payload = { doctorID: value };
     const res = await addDoctorToHospital({ payload });
     if (res.success) {
-      toast({
-        title: "Doctor added successfully!",
+      toast.success("Doctor added successfully!", {
         description: `Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} is added to the hospital.`,
-        variant: "default",
       });
     } else {
-      toast({
-        title: "Failed to add doctor!",
+      toast.error("Failed to add doctor!", {
         description: `Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} doctor is not added to the hospital.`,
-        variant: "destructive",
       });
     }
     setTimeout(() => {

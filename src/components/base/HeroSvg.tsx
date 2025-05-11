@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const HeroSvg = ({ name, className }: { name: string; className?: string }) => {
   return (

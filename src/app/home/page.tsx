@@ -3,7 +3,7 @@ import HeroSvg from "@/components/base/HeroSvg";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import { useUserStore } from "@/store/user";
 import { useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function Home() {
   const getUser = useUserStore((state) => state.getUser);

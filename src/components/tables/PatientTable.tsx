@@ -266,7 +266,7 @@ export function PatientTable({
   });
 
   return (
-    <div className="w-full px-36">
+    <div className="w-full px-36 mt-24">
       <div className="flex items-center py-4 gap-8">
         <Input
           placeholder="Search name..."

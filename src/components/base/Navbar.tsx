@@ -35,7 +35,7 @@ const Navbar = () => {
               await removeUser();
             }}
           >
-            <IconLogout className="size-6 text-foreground" />
+            <IconLogout className="size-6 text-foreground cursor-pointer" />
           </button>
         </div>
       ) : (

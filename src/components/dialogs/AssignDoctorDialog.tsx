@@ -27,7 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { gql, useQuery } from "@apollo/client";
 import { useUserStore } from "@/store/user";
 import { assignDoctorToPatient } from "@/app/actions/hospital";
@@ -68,7 +68,6 @@ export function AssignDoctorDialog({
   const doctors = data?.doctorsbyhospital;
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const { toast } = useToast();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -78,15 +77,12 @@ export function AssignDoctorDialog({
     };
     const res = await assignDoctorToPatient({ payload });
     if (!res.success) {
-      toast({
-        title: "Failed to assign doctor!",
+      toast.error("Failed to assign doctor!", {
         description: `Failed to assign Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} to the patient with ID:${patientId}`,
-        variant: "destructive",
       });
       return;
     }
-    toast({
-      title: "Doctor assigned successfully!",
+    toast.success("Doctor assigned successfully!", {
       description: `Dr.${doctors.filter((doctor: Doctor) => doctor.id == value)[0].user.name} is assigned to the patient with ID:${patientId}`,
     });
     setTimeout(() => {

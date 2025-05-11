@@ -20,7 +20,12 @@ export default function LoginForm() {
 
       <form className="my-8" action={action}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
+          <Label
+            htmlFor="email"
+            className="after:content-['*'] after:text-red-500 after:ml-0.5"
+          >
+            Email Address
+          </Label>
           <Input
             id="email"
             placeholder="Enter email address here"
@@ -30,7 +35,12 @@ export default function LoginForm() {
           {state?.errors?.email && <p>{state.errors.email}</p>}
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
+          <Label
+            htmlFor="password"
+            className="after:content-['*'] after:text-red-500 after:ml-0.5"
+          >
+            Password
+          </Label>
           <Input
             id="password"
             placeholder="Enter password here"

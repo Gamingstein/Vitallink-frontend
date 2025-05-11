@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Poppins, Caveat, Bevan } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
-import { Toaster } from "@/components/ui/toaster";
+import { Poppins, Caveat, Bevan, Geist } from "next/font/google";
 import { ApolloWrapper } from "@/components/wrappers/ApolloWrapper";
-import { Toaster as SonnerToaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import localFont from "next/font/local";
+import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
 const bevan = Bevan({
   weight: ["400"],
@@ -42,16 +46,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistSans.className} dark scroll-smooth antialiased`}
+      className={`scroll-smooth antialiased`}
+      suppressHydrationWarning
     >
       <body
-        className={`${poppins.variable} ${author.variable} ${caveat.variable} ${bevan.variable}`}
+        className={`${geistSans.className} ${poppins.variable} ${author.variable} ${caveat.variable} ${bevan.variable}`}
       >
-        <SonnerToaster />
-        <main>
-          <ApolloWrapper>{children}</ApolloWrapper>
-        </main>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main>
+            <ApolloWrapper>{children}</ApolloWrapper>
+          </main>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

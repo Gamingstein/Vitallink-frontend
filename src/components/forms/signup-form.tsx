@@ -31,7 +31,7 @@ export function SignupForm() {
         Welcome to VitalLink
       </h2>
       <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Login to VitalLink if you have already created an account
+        Start your journey with VitalLink by creating an account.
       </p>
 
       <form
@@ -46,54 +46,54 @@ export function SignupForm() {
           <div>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
               <LabelInputContainer>
-                <Label htmlFor="firstname">First name</Label>
-                <Input
-                  id="firstname"
-                  placeholder="Tyler"
-                  type="text"
-                  name="firstname"
-                />
+                <Label
+                  htmlFor="firstname"
+                  className="after:content-['*'] after:text-red-500 after:ml-0.5"
+                >
+                  First name
+                </Label>
+                <Input id="firstname" type="text" name="firstname" />
                 {state?.errors?.firstname && <p>{state.errors.firstname}</p>}
               </LabelInputContainer>
               <LabelInputContainer>
-                <Label htmlFor="lastname">Last name</Label>
-                <Input
-                  id="lastname"
-                  placeholder="Durden"
-                  type="text"
-                  name="lastname"
-                />
+                <Label
+                  htmlFor="lastname"
+                  className="after:content-['*'] after:text-red-500 after:ml-0.5"
+                >
+                  Last name
+                </Label>
+                <Input id="lastname" type="text" name="lastname" />
                 {state?.errors?.lastname && <p>{state.errors.lastname}</p>}
               </LabelInputContainer>
             </div>
             <LabelInputContainer className="mb-4">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                placeholder="tylerdurden"
-                type="text"
-                name="username"
-              />
+              <Label
+                htmlFor="username"
+                className="after:content-['*'] after:text-red-500 after:ml-0.5"
+              >
+                Username
+              </Label>
+              <Input id="username" type="text" name="username" />
               {state?.errors?.username && <p>{state.errors.username}</p>}
             </LabelInputContainer>
             <LabelInputContainer className="mb-4">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                placeholder="projectmayhem@fc.com"
-                type="email"
-                name="email"
-              />
+              <Label
+                htmlFor="email"
+                className="after:content-['*'] after:text-red-500 after:ml-0.5"
+              >
+                Email Address
+              </Label>
+              <Input id="email" type="email" name="email" />
               {state?.errors?.email && <p>{state.errors.email}</p>}
             </LabelInputContainer>
             <LabelInputContainer className="mb-4">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                placeholder="••••••••"
-                type="password"
-                name="password"
-              />
+              <Label
+                htmlFor="password"
+                className="after:content-['*'] after:text-red-500 after:ml-0.5"
+              >
+                Password
+              </Label>
+              <Input id="password" type="password" name="password" />
               {state?.errors?.password && (
                 <div>
                   <p>Password must:</p>
@@ -107,28 +107,51 @@ export function SignupForm() {
             </LabelInputContainer>
           </div>
           <LabelInputContainer className="mb-4 space-y-2 md:space-y-0 md:space-x-2 max-w-[400px]">
-            <Label htmlFor="avatar">Avatar</Label>
+            <Label
+              htmlFor="avatar"
+              className="after:content-['*'] after:text-red-500 after:ml-0.5"
+            >
+              Avatar
+            </Label>
             <FileUpload onChange={handleFileUpload} />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="flex mb-8">
-          <Label htmlFor="isDoctor">I am a doctor</Label>
-          <Switch
-            id="isDoctor"
-            checked={isDoctor}
-            onCheckedChange={() => {
-              setIsDoctor(!isDoctor);
+          <Label htmlFor="isDoctor">Are you a doctor?</Label>
+          <Select
+            name="isDoctor"
+            onValueChange={(value) => {
+              if (value === "true") {
+                setIsDoctor(true);
+              } else {
+                setIsDoctor(false);
+              }
             }}
-          />
+          >
+            <SelectTrigger className="w-[370px]">
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="true">Yes</SelectItem>
+                <SelectItem value="false">No</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </LabelInputContainer>
 
         {isDoctor && (
           <div className="flex items-start md:flex-row flex-col gap-16 mb-8">
             <LabelInputContainer>
-              <Label htmlFor="gender">Gender</Label>
+              <Label
+                htmlFor="gender"
+                className="after:content-['*'] after:text-red-500 after:ml-0.5"
+              >
+                Gender
+              </Label>
               <Select name="gender">
                 <SelectTrigger className="w-[370px]">
-                  <SelectValue placeholder="Select gender" />
+                  <SelectValue placeholder="Select Gender" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -140,10 +163,15 @@ export function SignupForm() {
               </Select>
             </LabelInputContainer>
             <LabelInputContainer>
-              <Label htmlFor="specification">Specification</Label>
+              <Label
+                htmlFor="specification"
+                className="after:content-['*'] after:text-red-500 after:ml-0.5"
+              >
+                Specification
+              </Label>
               <Select name="specification">
                 <SelectTrigger className="w-[370px]">
-                  <SelectValue placeholder="Select specification" />
+                  <SelectValue placeholder="Select Specification" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
