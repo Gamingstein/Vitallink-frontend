@@ -1,5 +1,4 @@
 import InfoCard from "@/components/cards/InfoCard";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function PatientPage({
   params,
